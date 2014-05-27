@@ -397,6 +397,7 @@ void setup_mp(void)
 	int i = find_tlb_idx((void *)CONFIG_BPTR_VIRT_ADDR, 1);
 
 	/* we found a match */
+#ifndef CONFIG_HH_BOOT_RAM
 	if (i != -1) {
 		/* map reset page to bootpg so we can copy code there */
 		disable_tlb(i);
@@ -412,4 +413,5 @@ void setup_mp(void)
 		puts("WARNING: No reset page TLB. "
 			"Skipping secondary core setup\n");
 	}
+#endif
 }

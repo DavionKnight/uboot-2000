@@ -178,8 +178,10 @@ void cpu_init_early_f(void)
 	out_be32(&l2cache->l2srbar0, 0x0);
 #endif
 
+#ifndef CONFIG_HH_BOOT_RAM
 	invalidate_tlb(1);
-
+#endif
+    
 #if defined(CONFIG_SECURE_BOOT)
 	/* Disable the TLBs created by ISBC */
 	for (i = CONFIG_SYS_ISBC_START_TLB;
@@ -187,5 +189,7 @@ void cpu_init_early_f(void)
 			disable_tlb(i);
 #endif
 
-	init_tlbs();
+#ifndef CONFIG_HH_BOOT_RAM
+    init_tlbs();
+#endif
 }

@@ -61,6 +61,12 @@
 #define __SW_BOOT_SD		0x9c
 #define __SW_BOOT_NAND		0xec
 #define __SW_BOOT_PCIE		0x6c
+
+#define CONFIG_HH_BOOT_RAM      /* for RAM debug */
+#ifdef CONFIG_HH_BOOT_RAM
+#define CONFIG_HH_BOOT_RAM_ADDR 0x18000000
+#endif
+
 #endif
 
 #if defined(CONFIG_P1021RDB)
@@ -418,7 +424,12 @@
 #define CONFIG_BOARD_EARLY_INIT_R	/* call board_early_init_r function */
 
 #define CONFIG_SYS_INIT_RAM_LOCK
+#ifdef CONFIG_HH_BOOT_RAM
+#define CONFIG_SYS_INIT_RAM_ADDR	0x2fd00000 /* stack in RAM */
+#else
 #define CONFIG_SYS_INIT_RAM_ADDR	0xffd00000 /* stack in RAM */
+#endif
+
 #ifdef CONFIG_PHYS_64BIT
 #define CONFIG_SYS_INIT_RAM_ADDR_PHYS_HIGH 0xf
 #define CONFIG_SYS_INIT_RAM_ADDR_PHYS_LOW CONFIG_SYS_INIT_RAM_ADDR

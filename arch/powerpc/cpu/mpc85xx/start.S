@@ -1146,8 +1146,24 @@ version_string:
 	.align	4
 	.globl	_start_cont
 _start_cont:
+#ifdef CONFIG_HH_BOOT_RAM
+     /* Enable Time Base and Select Time Base Clock */
+	lis	r0,HID0_EMCP@h		/* Enable machine check */
+#if defined(CONFIG_ENABLE_36BIT_PHYS)
+	ori	r0,r0,HID0_ENMAS7@l	/* Enable MAS7 */
+#endif
+#ifndef CONFIG_E500MC
+	ori	r0,r0,HID0_TBEN@l	/* Enable Timebase */
+#endif
+	mtspr	HID0,r0
+#endif
 	/* Setup the stack in initial RAM,could be L2-as-SRAM or L1 dcache*/
-	lis	r1,CONFIG_SYS_INIT_RAM_ADDR@h
+    #ifdef CONFIG_HH_BOOT_RAM
+    /* Added by huang gc */
+    lis	r1,CONFIG_HH_BOOT_RAM_ADDR@h
+    #else
+    lis	r1,CONFIG_SYS_INIT_RAM_ADDR@h
+    #endif
 	ori	r1,r1,CONFIG_SYS_INIT_SP_OFFSET@l
 
 	li	r0,0

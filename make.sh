@@ -19,10 +19,10 @@ export ARCH=powerpc
 #export CROSS_COMPILE=/opt/eldk4.2_ppc/usr/bin/ppc_85xxDP-
 export CROSS_COMPILE=powerpc-fsl-linux-gnuspe-
 
-make distclean
-make P1020RDB-PC_NAND
+# make distclean
+# make P1020RDB-PC_NAND
 
-make clean
+# make clean
 
 make all
 
