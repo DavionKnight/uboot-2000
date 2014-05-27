@@ -20,8 +20,8 @@ export ARCH=powerpc
 export CROSS_COMPILE=powerpc-fsl-linux-gnuspe-
 
 make distclean
-#make P1020RDB-PC_NAND
-make CPU_P1020_NAND
+make P1020RDB-PC_NAND
+#make CPU_P1020_NAND
 
 make clean
 

@@ -587,7 +587,7 @@ fsl_ddr_sdram_size(void)
 	fsl_ddr_info_t  info;
 	unsigned long long total_memory = 0;
 
-	memset(&info, 0 , sizeof(fsl_ddr_info_t));
+    memset(&info, 0 , sizeof(fsl_ddr_info_t));
 
 	/* Compute it once normally. */
 	total_memory = fsl_ddr_compute(&info, STEP_GET_SPD, 1);

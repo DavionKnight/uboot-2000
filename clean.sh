@@ -19,15 +19,14 @@ export ARCH=powerpc
 #export CROSS_COMPILE=/opt/eldk4.2_ppc/usr/bin/ppc_85xxDP-
 export CROSS_COMPILE=powerpc-fsl-linux-gnuspe-
 
-make distclean
-#make P1020RDB-PC_NAND
-make CPU_P1020_NAND
+# make distclean
+# make P1020RDB-PC_NAND
 
 make clean
 
-make all
+#make all
 
-cp u-boot.bin ~/tftpboot/u-bootram.bin
+#cp u-boot.bin ~/tftpboot/u-bootram.bin
 #cp ./u-boot.bin  /home/sxl/tftpboot/lmxe_u-boot.bin 
 #cp ./u-boot-nand.bin /home/liuyk/tftpboot/
 
