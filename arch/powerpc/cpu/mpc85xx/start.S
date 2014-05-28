@@ -1158,12 +1158,7 @@ _start_cont:
 	mtspr	HID0,r0
 #endif
 	/* Setup the stack in initial RAM,could be L2-as-SRAM or L1 dcache*/
-    #ifdef CONFIG_HH_BOOT_RAM
-    /* Added by huang gc */
-    lis	r1,CONFIG_HH_BOOT_RAM_ADDR@h
-    #else
     lis	r1,CONFIG_SYS_INIT_RAM_ADDR@h
-    #endif
 	ori	r1,r1,CONFIG_SYS_INIT_SP_OFFSET@l
 
 	li	r0,0

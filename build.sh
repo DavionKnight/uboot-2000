@@ -3,7 +3,7 @@
 #export PATH=/home/zhangqi/opt/eldk53/powerpc/sysroots/i686-eldk-linux/usr/bin:/home/zhangqi/opt/eldk53/powerpc/sysroots/i686-eldk-linux/usr/bin/powerpc-linux:$PATH
 
 #export PATH=/home/zhangqi/opt/eldk42/usr/bin:$PATH
-
+source /opt/fsl/1.2/environment-setup-ppce500v2-fsl-linux-gnuspe
 export ARCH=powerpc
 
 #export CROSS_COMPILE=ppc_8xx-
@@ -27,7 +27,8 @@ make clean
 
 make all
 
-cp u-boot.bin ~/tftpboot/u-bootram.bin
+#cp u-boot.bin ~/tftpboot/u-bootram.bin
+cp u-boot-nand.bin ~/tftpboot/
 #cp ./u-boot.bin  /home/sxl/tftpboot/lmxe_u-boot.bin 
 #cp ./u-boot-nand.bin /home/liuyk/tftpboot/
 
