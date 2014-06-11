@@ -68,8 +68,8 @@ static uchar 		din[MAX_SPI_BYTES];
 int do_spi (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	struct spi_slave *slave;
-	char  *cp = 0;
-	uchar tmp;
+    char  *cp = 0;
+    uchar tmp;
 	int   j;
 	int   rcode = 0;
 

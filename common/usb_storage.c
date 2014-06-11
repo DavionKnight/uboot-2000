@@ -59,6 +59,7 @@
 #undef BBB_COMDAT_TRACE
 #undef BBB_XPORT_TRACE
 
+/* #define USB_STOR_DEBUG */
 #ifdef	USB_STOR_DEBUG
 #define USB_BLK_DEBUG	1
 #else
@@ -273,7 +274,7 @@ int usb_stor_scan(int mode)
 				if (usb_stor_get_info(dev, &usb_stor[start],
 						      &usb_dev_desc[usb_max_devs]) == 1) {
 				usb_max_devs++;
-		}
+                }
 			}
 		}
 		/* if storage device */

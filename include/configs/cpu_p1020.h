@@ -34,7 +34,8 @@
 #define CONFIG_BOARDNAME "CPU-P1020"
 #define CONFIG_NAND_FSL_ELBC
 #define CONFIG_P1020
-/* #define CONFIG_SPI_FLASH */
+#define CONFIG_SPI_FLASH
+#define CONFIG_SPI_FLASH_STMICRO
 /* #define CONFIG_VSC7385_ENET */
 #define CONFIG_SYS_NO_FLASH
 #define CONFIG_SLIC
@@ -45,7 +46,7 @@
 /* #define __SW_BOOT_NAND		0xec */
 /* #define __SW_BOOT_PCIE		0x6c */
 
-#define CONFIG_HH_BOOT_RAM      /* for RAM debug */
+/* #define CONFIG_HH_BOOT_RAM      /* for RAM debug */
 /* #ifdef CONFIG_HH_BOOT_RAM */
 /* #define CONFIG_HH_BOOT_RAM_ADDR 0x18000000 */
 /* #endif */
@@ -547,14 +548,14 @@
 
 #define CONFIG_MII		/* MII PHY management */
 #define CONFIG_TSEC1
-#define CONFIG_TSEC1_NAME	"eTSEC1"
+#define CONFIG_TSEC1_NAME	"eth1"/* "eTSEC1" */
 #define CONFIG_TSEC2
-#define CONFIG_TSEC2_NAME	"eTSEC2"
+#define CONFIG_TSEC2_NAME	"eth2"/* "eTSEC2" */
 #define CONFIG_TSEC3
-#define CONFIG_TSEC3_NAME	"eTSEC3"
+#define CONFIG_TSEC3_NAME	"eth3"/* "eTSEC3" */
 
-#define TSEC1_PHY_ADDR	2
-#define TSEC2_PHY_ADDR	0
+#define TSEC1_PHY_ADDR	3       /* 2 */
+#define TSEC2_PHY_ADDR	0x19    /* 0 */
 #define TSEC3_PHY_ADDR	1
 
 #define TSEC1_FLAGS	(TSEC_GIGABIT | TSEC_REDUCED)
@@ -565,7 +566,7 @@
 #define TSEC2_PHYIDX	0
 #define TSEC3_PHYIDX	0
 
-#define CONFIG_ETHPRIME	"eTSEC3"
+#define CONFIG_ETHPRIME	"eth3"
 
 #define CONFIG_PHY_GIGE	1	/* Include GbE speed/duplex detection */
 
@@ -671,6 +672,7 @@
 #define CONFIG_CMD_ELF
 #define CONFIG_CMD_SETEXPR
 #define CONFIG_CMD_REGINFO
+#define CONFIG_CMD_SPI
 
 /*
  * USB

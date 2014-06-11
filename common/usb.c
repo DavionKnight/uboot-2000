@@ -55,7 +55,7 @@
 #ifdef CONFIG_4xx
 #include <asm/4xx_pci.h>
 #endif
-
+/* #define DEBUG */
 #ifdef DEBUG
 #define USB_DEBUG	1
 #define USB_HUB_DEBUG	1
