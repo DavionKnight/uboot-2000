@@ -94,8 +94,10 @@ static void tsec_configure_serdes(struct tsec_private *priv)
 {
 	/* Access TBI PHY registers at given TSEC register offset as opposed
 	 * to the register offset used for external PHY accesses */
-	tsec_local_mdio_write(priv->phyregs_sgmii, in_be32(&priv->regs->tbipa),
-			0, TBI_ANA, TBIANA_SETTINGS);
+    /* tsec_local_mdio_write(priv->phyregs_sgmii, in_be32(&priv->regs->tbipa), */
+    /* 	0, TBI_ANA, TBIANA_SETTINGS); */
+    tsec_local_mdio_write(priv->phyregs_sgmii, in_be32(&priv->regs->tbipa),
+        0, TBI_ANA, TBIANA_SGMII_INIT_VALUE);
 	tsec_local_mdio_write(priv->phyregs_sgmii, in_be32(&priv->regs->tbipa),
 			0, TBI_TBICON, TBICON_CLK_SELECT);
 	tsec_local_mdio_write(priv->phyregs_sgmii, in_be32(&priv->regs->tbipa),
@@ -235,7 +237,7 @@ static void adjust_link(struct tsec_private *priv, struct phy_device *phydev)
 	out_be32(&regs->ecntrl, ecntrl);
 	out_be32(&regs->maccfg2, maccfg2);
 
-	printf("Speed: %d, %s duplex%s\n", phydev->speed,
+	printf("%s Speed: %d, %s duplex%s\n", phydev->dev->name, phydev->speed,
 			(phydev->duplex) ? "full" : "half",
 			(phydev->port == PORT_FIBRE) ? ", fiber mode" : "");
 }
@@ -411,6 +413,7 @@ static int tsec_send(struct eth_device *dev, volatile void *packet, int length)
 	txIdx = (txIdx + 1) % TX_BUF_CNT;
 	result = rtx.txbd[txIdx].status & TXBD_STATS;
 
+    debug("%s:Tx ok\n", dev->name);
 	return result;
 }
 
@@ -469,6 +472,7 @@ static void tsec_halt(struct eth_device *dev)
 	phy_shutdown(priv->phydev);
 }
 
+
 /* Initializes data structures and registers for the controller,
  * and brings the interface up.	 Returns the link status, meaning
  * that it returns success if the link is up, failure otherwise.
@@ -489,7 +493,7 @@ static int tsec_init(struct eth_device *dev, bd_t * bd)
 	out_be32(&regs->maccfg2, MACCFG2_INIT_SETTINGS);
 
 	/* Init ECNTRL */
-	out_be32(&regs->ecntrl, ECNTRL_INIT_SETTINGS);
+    out_be32(&regs->ecntrl, ECNTRL_INIT_SETTINGS);
 
 	/* Copy the station address into the address registers.
 	 * Backwards, because little endian MACS are dumb */
@@ -584,7 +588,6 @@ static int init_phy(struct eth_device *dev)
 	out_be32(&regs->tbipa, CONFIG_SYS_TBIPA_VALUE);
 
 	priv->interface = tsec_get_interface(priv);
-
 	if (priv->interface == PHY_INTERFACE_MODE_SGMII)
 		tsec_configure_serdes(priv);
 

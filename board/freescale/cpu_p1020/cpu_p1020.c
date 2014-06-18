@@ -354,11 +354,22 @@ int board_eth_init(bd_t *bis)
 		printf("eTSEC2 is in sgmii mode.\n");
 		tsec_info[num].flags |= TSEC_SGMII;
 	}
-	num++;
+	
+    mdio_info.regs = tsec_info[num].miiregs_sgmii;
+	mdio_info.name = CONFIG_MDIO2_NAME;
+	fsl_pq_mdio_init(bis, &mdio_info);
+    
+    num++;
 #endif
 #ifdef CONFIG_TSEC3
 	SET_STD_TSEC_INFO(tsec_info[num], 3);
+#ifdef CONFIG_TSEC3_SGMII
+    mdio_info.regs = tsec_info[num].miiregs_sgmii;
+	mdio_info.name = CONFIG_MDIO3_NAME;
+	fsl_pq_mdio_init(bis, &mdio_info);
+#endif
 	num++;
+    
 #endif
 
 	if (!num) {
@@ -380,9 +391,9 @@ int board_eth_init(bd_t *bis)
 
 	mdio_info.regs = (struct tsec_mii_mng *)CONFIG_SYS_MDIO_BASE_ADDR;
 	mdio_info.name = DEFAULT_MII_NAME;
-
 	fsl_pq_mdio_init(bis, &mdio_info);
 
+    miiphy_set_current_dev(DEFAULT_MII_NAME);
 	tsec_eth_init(bis, tsec_info, num);
 
 #if defined(CONFIG_UEC_ETH)

@@ -754,8 +754,8 @@ int himport_r(struct hsearch_data *htab,
 			return 0;
 		}
 
-		debug("INSERT: table %p, filled %d/%d rv %p ==> name=\"%s\" value=\"%s\"\n",
-			htab, htab->filled, htab->size,
+		debug("INSERT: table , filled %d/%d rv %p ==> name=\"%s\" value=\"%s\"\n",
+			/* htab, */ htab->filled, htab->size,
 			rv, name, value);
 	} while ((dp < data + size) && *dp);	/* size check needed for text */
 						/* without '\0' termination */

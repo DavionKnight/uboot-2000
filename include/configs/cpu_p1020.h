@@ -46,7 +46,7 @@
 /* #define __SW_BOOT_NAND		0xec */
 /* #define __SW_BOOT_PCIE		0x6c */
 
-/* #define CONFIG_HH_BOOT_RAM      /* for RAM debug */
+#define CONFIG_HH_BOOT_RAM      /* for RAM debug */
 /* #ifdef CONFIG_HH_BOOT_RAM */
 /* #define CONFIG_HH_BOOT_RAM_ADDR 0x18000000 */
 /* #endif */
@@ -548,19 +548,28 @@
 
 #define CONFIG_MII		/* MII PHY management */
 #define CONFIG_TSEC1
+#define CONFIG_MDIO1_NAME   "mdio1"
 #define CONFIG_TSEC1_NAME	"eth1"/* "eTSEC1" */
 #define CONFIG_TSEC2
+#define CONFIG_MDIO2_NAME   "mdio2"
 #define CONFIG_TSEC2_NAME	"eth2"/* "eTSEC2" */
 #define CONFIG_TSEC3
+#define CONFIG_MDIO3_NAME   "mdio3"
 #define CONFIG_TSEC3_NAME	"eth3"/* "eTSEC3" */
+#define CONFIG_TSEC3_SGMII 
 
 #define TSEC1_PHY_ADDR	3       /* 2 */
 #define TSEC2_PHY_ADDR	0x19    /* 0 */
-#define TSEC3_PHY_ADDR	1
+#define TSEC3_PHY_ADDR	0x1a    /* 1 */
 
 #define TSEC1_FLAGS	(TSEC_GIGABIT | TSEC_REDUCED)
-#define TSEC2_FLAGS	(TSEC_GIGABIT | TSEC_REDUCED)
+/* #define TSEC2_FLAGS	(TSEC_GIGABIT | TSEC_REDUCED) */
+#define TSEC2_FLAGS	(TSEC_GIGABIT | TSEC_SGMII)
+#ifdef CONFIG_TSEC3_SGMII
+#define TSEC3_FLAGS	(TSEC_GIGABIT | TSEC_SGMII)
+#else
 #define TSEC3_FLAGS	(TSEC_GIGABIT | TSEC_REDUCED)
+#endif
 
 #define TSEC1_PHYIDX	0
 #define TSEC2_PHYIDX	0
