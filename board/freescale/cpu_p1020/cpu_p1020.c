@@ -351,7 +351,7 @@ int board_eth_init(bd_t *bis)
 #ifdef CONFIG_TSEC2
 	SET_STD_TSEC_INFO(tsec_info[num], 2);
 	if (is_serdes_configured(SGMII_TSEC2)) {
-		printf("eTSEC2 is in sgmii mode.\n");
+		printf("Eth2 is in sgmii mode.\n");
 		tsec_info[num].flags |= TSEC_SGMII;
 	}
 	
@@ -367,6 +367,7 @@ int board_eth_init(bd_t *bis)
     mdio_info.regs = tsec_info[num].miiregs_sgmii;
 	mdio_info.name = CONFIG_MDIO3_NAME;
 	fsl_pq_mdio_init(bis, &mdio_info);
+    printf("Eth3 is in sgmii mode.\n");
 #endif
 	num++;
     

@@ -32,6 +32,7 @@ case "$1" in
         ;;
     all)
         make all
+        cp u-boot.bin ~/tftpboot/
         ;;
     *)
         echo  $"Usage: $0 {clean |distclean |cpu-p1020| all}"

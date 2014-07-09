@@ -64,7 +64,6 @@ int ehci_hcd_init(void)
 	hccr = (struct ehci_hccr *)((uint32_t)&ehci->caplength);
 	hcor = (struct ehci_hcor *)((uint32_t) hccr +
 			HC_LENGTH(ehci_readl(&hccr->cr_capbase)));
-
 	/* Set to Host mode */
 	setbits_le32(&ehci->usbmode, CM_HOST);
 

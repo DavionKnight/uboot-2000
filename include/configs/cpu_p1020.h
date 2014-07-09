@@ -46,7 +46,7 @@
 /* #define __SW_BOOT_NAND		0xec */
 /* #define __SW_BOOT_PCIE		0x6c */
 
-#define CONFIG_HH_BOOT_RAM      /* for RAM debug */
+/* #define CONFIG_HH_BOOT_RAM */      /* for RAM debug */
 /* #ifdef CONFIG_HH_BOOT_RAM */
 /* #define CONFIG_HH_BOOT_RAM_ADDR 0x18000000 */
 /* #endif */
@@ -556,7 +556,7 @@
 #define CONFIG_TSEC3
 #define CONFIG_MDIO3_NAME   "mdio3"
 #define CONFIG_TSEC3_NAME	"eth3"/* "eTSEC3" */
-#define CONFIG_TSEC3_SGMII 
+#define CONFIG_TSEC3_SGMII
 
 #define TSEC1_PHY_ADDR	3       /* 2 */
 #define TSEC2_PHY_ADDR	0x19    /* 0 */
