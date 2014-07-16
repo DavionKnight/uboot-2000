@@ -260,6 +260,43 @@ int saveenv(void)
 	return ret;
 }
 #endif /* CONFIG_ENV_OFFSET_REDUND */
+
+int eraseenv(void)
+{
+	int	ret = 0;
+	env_t	env_new;
+	ssize_t	len;
+	char	*res;
+	nand_erase_options_t nand_erase_options;
+
+	memset(&nand_erase_options, 0, sizeof(nand_erase_options));
+	nand_erase_options.length = CONFIG_ENV_RANGE;
+	nand_erase_options.offset = CONFIG_ENV_OFFSET;
+
+	if (CONFIG_ENV_RANGE < CONFIG_ENV_SIZE)
+		return 1;
+
+	/* res = (char *)&env_new.data; */
+	/* len = hexport_r(&env_htab, '\0', &res, ENV_SIZE, 0, NULL); */
+	/* if (len < 0) { */
+	/* 	error("Cannot export environment: errno = %d\n", errno); */
+	/* 	return 1; */
+	/* } */
+	/* env_new.crc = crc32(0, env_new.data, ENV_SIZE); */
+
+	puts("Erasing Nand...\n");
+	if (nand_erase_opts(&nand_info[0], &nand_erase_options))
+		return 1;
+
+	/* puts("Writing to Nand... "); */
+	/* if (writeenv(CONFIG_ENV_OFFSET, (u_char *)&env_new)) { */
+	/* 	puts("FAILED!\n"); */
+	/* 	return 1; */
+	/* } */
+
+	/* puts("done\n"); */
+	return ret;
+}
 #endif /* CMD_SAVEENV */
 
 int readenv(size_t offset, u_char *buf)

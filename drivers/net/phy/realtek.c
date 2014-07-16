@@ -105,6 +105,11 @@ static int rtl8211b_parse_status(struct phy_device *phydev)
 
 static int rtl8211b_startup(struct phy_device *phydev)
 {
+    /* LED config */
+    phy_write(phydev, MDIO_DEVAD_NONE, 0x1f, 7);
+    phy_write(phydev, MDIO_DEVAD_NONE, 0x1e, 0x2c);
+    phy_write(phydev, MDIO_DEVAD_NONE, 0x1c, 0x0777);
+    phy_write(phydev, MDIO_DEVAD_NONE, 0x1f, 0);
 	/* Read the Status (2x to make sure link is right) */
 	genphy_update_link(phydev);
 	rtl8211b_parse_status(phydev);

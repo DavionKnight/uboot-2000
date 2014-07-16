@@ -343,15 +343,23 @@ int board_eth_init(bd_t *bis)
 	char *tmp;
 	unsigned int vscfw_addr;
 #endif
-
+    char *if_type;
+    int phyaddr;
+    
 #ifdef CONFIG_TSEC1
 	SET_STD_TSEC_INFO(tsec_info[num], 1);
+    phyaddr = getenv_ulong("phy0addr", 0, TSEC1_PHY_ADDR);
+    tsec_info[num].phyaddr = phyaddr;
+    /* printf("phy%daddr 0x%x\n", num, phyaddr); */
 	num++;
 #endif
 #ifdef CONFIG_TSEC2
 	SET_STD_TSEC_INFO(tsec_info[num], 2);
+    phyaddr = getenv_ulong("phy1addr", 0, TSEC2_PHY_ADDR);
+    tsec_info[num].phyaddr = phyaddr;
+    /* printf("phy%daddr 0x%x\n", num, phyaddr); */
 	if (is_serdes_configured(SGMII_TSEC2)) {
-		printf("Eth2 is in sgmii mode.\n");
+		/* printf("Eth1 is in sgmii mode.\n"); */
 		tsec_info[num].flags |= TSEC_SGMII;
 	}
 	
@@ -363,14 +371,21 @@ int board_eth_init(bd_t *bis)
 #endif
 #ifdef CONFIG_TSEC3
 	SET_STD_TSEC_INFO(tsec_info[num], 3);
-#ifdef CONFIG_TSEC3_SGMII
-    mdio_info.regs = tsec_info[num].miiregs_sgmii;
-	mdio_info.name = CONFIG_MDIO3_NAME;
-	fsl_pq_mdio_init(bis, &mdio_info);
-    printf("Eth3 is in sgmii mode.\n");
-#endif
+    phyaddr = getenv_ulong("phy2addr", 0, TSEC3_PHY_ADDR);
+    tsec_info[num].phyaddr = phyaddr;
+    /* printf("phy%daddr 0x%x\n", num, phyaddr); */
+/* #ifdef CONFIG_TSEC3_SGMII */
+    if_type = getenv("eth2_if");
+    if(strncmp(if_type, "sgmii", 5) == 0)
+    {
+        mdio_info.regs = tsec_info[num].miiregs_sgmii;
+        mdio_info.name = CONFIG_MDIO3_NAME;
+        fsl_pq_mdio_init(bis, &mdio_info);
+        /* printf("Eth2 is in sgmii mode."); */
+    }
+/* #endif */
 	num++;
-    
+
 #endif
 
 	if (!num) {

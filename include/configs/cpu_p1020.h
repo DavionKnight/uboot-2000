@@ -45,8 +45,7 @@
 /* #define __SW_BOOT_SD		0x9c */
 /* #define __SW_BOOT_NAND		0xec */
 /* #define __SW_BOOT_PCIE		0x6c */
-
-#define CONFIG_HH_BOOT_RAM      /* for RAM debug */
+/* #define CONFIG_HH_BOOT_RAM */
 
 #endif
 
@@ -546,14 +545,14 @@
 
 #define CONFIG_MII		/* MII PHY management */
 #define CONFIG_TSEC1
-#define CONFIG_MDIO1_NAME   "mdio1"
-#define CONFIG_TSEC1_NAME	"eth1"/* "eTSEC1" */
+#define CONFIG_MDIO1_NAME   "mdio0"
+#define CONFIG_TSEC1_NAME	"eth0"/* "eTSEC1" */
 #define CONFIG_TSEC2
-#define CONFIG_MDIO2_NAME   "mdio2"
-#define CONFIG_TSEC2_NAME	"eth2"/* "eTSEC2" */
+#define CONFIG_MDIO2_NAME   "mdio1"
+#define CONFIG_TSEC2_NAME	"eth1"/* "eTSEC2" */
 #define CONFIG_TSEC3
-#define CONFIG_MDIO3_NAME   "mdio3"
-#define CONFIG_TSEC3_NAME	"eth3"/* "eTSEC3" */
+#define CONFIG_MDIO3_NAME   "mdio2"
+#define CONFIG_TSEC3_NAME	"eth2"/* "eTSEC3" */
 #define CONFIG_TSEC3_SGMII
 
 #define TSEC1_PHY_ADDR	3       /* 2 */
@@ -573,7 +572,7 @@
 #define TSEC2_PHYIDX	0
 #define TSEC3_PHYIDX	0
 
-#define CONFIG_ETHPRIME	"eth3"
+#define CONFIG_ETHPRIME	"eth1"
 
 #define CONFIG_PHY_GIGE	1	/* Include GbE speed/duplex detection */
 
@@ -834,7 +833,11 @@ MK_STR(__NOR_RST_CMD)"\0" \
 MK_STR(__SPI_RST_CMD)"\0" \
 MK_STR(__SD_RST_CMD)"\0" \
 MK_STR(__NAND_RST_CMD)"\0" \
-MK_STR(__PCIE_RST_CMD)"\0"
+MK_STR(__PCIE_RST_CMD)"\0" \
+"phy0addr=" MK_STR(TSEC1_PHY_ADDR) "\0" \
+"phy1addr=" MK_STR(TSEC2_PHY_ADDR) "\0" \
+"phy2addr=" MK_STR(TSEC3_PHY_ADDR) "\0"  \
+"eth2_if=sgmii\0"
 
 #define CONFIG_NFSBOOTCOMMAND	\
 "setenv bootargs root=/dev/nfs rw "	\

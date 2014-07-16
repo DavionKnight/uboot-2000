@@ -27,7 +27,7 @@
 
 #define CONFIG_SYS_MDIO_BASE_ADDR (MDIO_BASE_ADDR + 0x520)
 
-#define DEFAULT_MII_NAME "mdio1"
+#define DEFAULT_MII_NAME "mdio0"
 
 #define STD_TSEC_INFO(num) \
 {			\

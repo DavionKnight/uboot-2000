@@ -606,6 +606,19 @@ U_BOOT_CMD(
 	"save environment variables to persistent storage",
 	""
 );
+
+int do_env_erase(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+{
+	printf("Erasing Environment from %s...\n", env_name_spec);
+
+	return eraseenv() ? 1 : 0;
+}
+
+U_BOOT_CMD(
+	eraseenv, 1, 0,	do_env_erase,
+	"erase environment variables from persistent storage",
+	""
+);
 #endif
 
 
