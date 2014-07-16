@@ -46,10 +46,7 @@
 /* #define __SW_BOOT_NAND		0xec */
 /* #define __SW_BOOT_PCIE		0x6c */
 
-/* #define CONFIG_HH_BOOT_RAM */      /* for RAM debug */
-/* #ifdef CONFIG_HH_BOOT_RAM */
-/* #define CONFIG_HH_BOOT_RAM_ADDR 0x18000000 */
-/* #endif */
+#define CONFIG_HH_BOOT_RAM      /* for RAM debug */
 
 #endif
 
@@ -137,8 +134,9 @@
 #define CONFIG_SYS_NUM_ADDR_MAP		16	/* number of TLB1 entries */
 #endif
 
-#define CONFIG_SYS_MEMTEST_START	0x00200000	/* memtest works on */
-#define CONFIG_SYS_MEMTEST_END		0x1fffffff
+#define CONFIG_SYS_ALT_MEMTEST		1
+#define CONFIG_SYS_MEMTEST_START	0x1000/* 0x00200000	 *//* memtest works on */
+#define CONFIG_SYS_MEMTEST_END		0x1effffff/* 0x1fffffff */
 #define CONFIG_PANIC_HANG	/* do not reset board on panic */
 
 #define CONFIG_SYS_CCSRBAR		0xffe00000
