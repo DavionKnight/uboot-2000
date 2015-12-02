@@ -162,6 +162,9 @@ static int init_baudrate(void)
 
 /***********************************************************************/
 
+
+/***********************************************************************/
+
 void __board_add_ram_info(int use_default)
 {
 	/* please define platform specific board_add_ram_info() */
@@ -1048,10 +1051,40 @@ void board_init_r(gd_t *id, ulong dest_addr)
 		do_mdm_init = gd->do_mdm_init;
 	}
 #endif
+{
+	struct spi_slave *slave;
+#if 0
+		unsigned char cmd[2] = {0, 0};
+		unsigned char data[2];
+		size_t cmd_len = 2;
+		size_t data_len = 2;
+#endif
+		slave = spi_slave_init();
+#if 0
+		ds31400_read(slave, 0x00, data, data_len);
+		printf("*************data[0] = %02x data[1] = %02x\n", data[0], data[1]);
 
+		ds31400_read(slave, 0x60, data, data_len);
+		printf("**befor write***********data[0] = %02x data[1] = %02x\n", data[0], data[1]);
+
+		data[0] = 0x48;
+		//data[1] = 0x41;
+		data_len = 1;
+		ds31400_write(slave,0x60, data, data_len);
+		
+		ds31400_read(slave, 0x60, data, data_len);
+		printf("**befor write***********data[0] = %02x data[1] = %02x\n", data[0], data[1]);
+
+#endif
+		dpll_init_pre(slave);
+		//printf("board_gpio_init again here\n");
+		board_gpio_init();/* not necessary  tianzhy 2015-06-24*/
+		spi_slave_free(slave);
+}
 	/* Initialization complete - start the monitor */
 
 	/* main_loop() can return to retry autoboot, if so just run it again. */
+	
 	for (;;) {
 		WATCHDOG_RESET();
 		main_loop();

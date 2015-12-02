@@ -85,10 +85,10 @@ int fdt_find_and_setprop(void *fdt, const char *node, const char *prop,
 
 	if (nodeoff < 0)
 		return nodeoff;
-
+	//printf(" nodeoff < 0 \n");
 	if ((!create) && (fdt_get_property(fdt, nodeoff, prop, 0) == NULL))
 		return 0; /* create flag not set; so exit quietly */
-
+	//printf(" no prob \n");
 	return fdt_setprop(fdt, nodeoff, prop, val, len);
 }
 
@@ -323,7 +323,10 @@ void do_fixup_by_prop(void *fdt,
 	off = fdt_node_offset_by_prop_value(fdt, -1, pname, pval, plen);
 	while (off != -FDT_ERR_NOTFOUND) {
 		if (create || (fdt_get_property(fdt, off, prop, 0) != NULL))
-			fdt_setprop(fdt, off, prop, val, len);
+		{	fdt_setprop(fdt, off, prop, val, len);
+		//if( strcmp(pname, "cpu_type") == 0)
+			printf("find node and set, %s", (char *)pname);
+		}
 		off = fdt_node_offset_by_prop_value(fdt, off, pname, pval, plen);
 	}
 }
@@ -479,6 +482,43 @@ void fdt_fixup_ethernet(void *fdt)
 
 		sprintf(mac, "eth%daddr", ++i);
 	}
+}
+
+
+void fdt_fixup_sys_info(void *blob)
+{
+
+	int err, nodeoffset;
+	char  *tmp;
+
+	err = fdt_check_header(blob);
+	if (err < 0) {
+		printf("%s: %s\n", __FUNCTION__, fdt_strerror(err));
+		return err;
+	}
+
+	/* update, or add and update /device_info */
+	nodeoffset = fdt_path_offset(blob, "/device_info");
+	if (nodeoffset < 0) {
+		nodeoffset = fdt_add_subnode(blob, 0, "device_info");
+		if (nodeoffset < 0)
+			printf("WARNING: could not create /device_info: %s.\n",
+					fdt_strerror(nodeoffset));
+		return nodeoffset;
+	}
+	if ((tmp = getenv("device")) != NULL) {	
+		//printf("device =  %s\n", tmp);
+		err = fdt_setprop(blob, nodeoffset, "device_name", tmp,
+			10);
+	}
+	if (err < 0) {
+		printf("WARNING: could not set %s %s.\n", "device_type",
+				fdt_strerror(err));
+		return err;
+	}
+
+	
+	return 0;
 }
 
 /* Resize the fdt to its actual size + a bit of padding */

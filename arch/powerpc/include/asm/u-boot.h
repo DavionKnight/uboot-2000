@@ -140,6 +140,10 @@ typedef struct bd_info {
 	int		bi_phymode[1];          /* Determines phy mode */
 #endif
 #endif /* defined(CONFIG_4xx) */
+
+//add  used to judg  device model
+	uchar vendor[10];
+	uchar device[10];
 } bd_t;
 
 #endif /* __ASSEMBLY__ */

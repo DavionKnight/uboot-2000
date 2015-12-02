@@ -566,6 +566,7 @@ void ft_cpu_setup(void *blob, bd_t *bd)
 		fdt_fixup_crypto_node(blob, 0);
 
 	fdt_fixup_ethernet(blob);
+	fdt_fixup_sys_info(blob);//add by sxl
 
 	fdt_add_enet_stashing(blob);
 

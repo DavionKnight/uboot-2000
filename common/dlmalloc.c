@@ -1504,6 +1504,7 @@ void *sbrk(ptrdiff_t increment)
 	ulong old = mem_malloc_brk;
 	ulong new = old + increment;
 
+	//printf("| n +++ calloc\n");
 	/*
 	 * if we are giving memory back make sure we clear it out since
 	 * we set MORECORE_CLEARS to 1
@@ -1521,10 +1522,12 @@ void *sbrk(ptrdiff_t increment)
 
 void mem_malloc_init(ulong start, ulong size)
 {
+	//printf("| n +++ calloc\n");
+	
 	mem_malloc_start = start;
 	mem_malloc_end = start + size;
 	mem_malloc_brk = start;
-
+ //printf("\n mem_malloc_start = 0x%08x, size =0x%08x   mem_malloc_end = 0x%08x\n", mem_malloc_start, size, mem_malloc_end);
 	memset((void *)mem_malloc_start, 0, size);
 }
 
@@ -2175,7 +2178,7 @@ Void_t* mALLOc(bytes) size_t bytes;
     /* not initialized yet */
     return 0;
   }
-
+  //printf("\n mem_malloc_start = 0x%08x, mem_malloc_end = 0x%08x\n", mem_malloc_start, mem_malloc_end);
   if ((long)bytes < 0) return 0;
 
   nb = request2size(bytes);  /* padded request size; */
@@ -2184,25 +2187,33 @@ Void_t* mALLOc(bytes) size_t bytes;
 
   if (is_small_request(nb))  /* Faster version for small requests */
   {
+
+  	 //printf("\n is_small_request ++++ mALLOc \n");
     idx = smallbin_index(nb);
 
     /* No traversal or size check necessary for small bins.  */
 
     q = bin_at(idx);
     victim = last(q);
-
+	//printf("\n q victim ++++ mALLOc \n");
     /* Also scan the next one, since it would have a remainder < MINSIZE */
     if (victim == q)
     {
+    // printf("\n q = victim ++++ mALLOc \n");
       q = next_bin(q);
       victim = last(q);
     }
     if (victim != q)
     {
+     //printf("\n q != victim ++++ mALLOc \n");
       victim_size = chunksize(victim);
-      unlink(victim, bck, fwd);
+	//printf("\n chunksize  ,  victim.bk =  %p,  victim.fd = %p \n", victim->bk, victim->fd);
+      unlink(victim, bck, fwd);//????????????????????????????????????????????
+	//  printf("\n unlink   \n");
       set_inuse_bit_at_offset(victim, victim_size);
+	   // printf("\n set_inuse_bit_at_offset   \n");
       check_malloced_chunk(victim, nb);
+	  //printf("\n check_malloced_chunk   \n");
       return chunk2mem(victim);
     }
 
@@ -2211,6 +2222,8 @@ Void_t* mALLOc(bytes) size_t bytes;
   }
   else
   {
+
+  //	printf("\n no is_small_request ++++ mALLOc \n");
     idx = bin_index(nb);
     bin = bin_at(idx);
 
@@ -2237,6 +2250,7 @@ Void_t* mALLOc(bytes) size_t bytes;
     ++idx;
 
   }
+ // printf("\n  is_small_request find finished  ++++ mALLOc \n");
 
   /* Try to use the last split-off remainder */
 
@@ -2269,7 +2283,7 @@ Void_t* mALLOc(bytes) size_t bytes;
 
     frontlink(victim, victim_size, remainder_index, bck, fwd);
   }
-
+//   printf("\n  ivictim    ++++ mALLOc \n");
   /*
      If there are any possibly nonempty big-enough blocks,
      search for best fitting chunk by scanning bins in blockwidth units.
@@ -2291,7 +2305,7 @@ Void_t* mALLOc(bytes) size_t bytes;
 	block <<= 1;
       }
     }
-
+  //printf("\n  idx2binblock    ++++ mALLOc \n");
     /* For each possibly nonempty block ... */
     for (;;)
     {
@@ -2362,6 +2376,7 @@ Void_t* mALLOc(bytes) size_t bytes;
     }
   }
 
+  //printf("\n  idx2binblock end	  ++++ mALLOc \n");
 
   /* Try to use top chunk */
 
@@ -2381,6 +2396,7 @@ Void_t* mALLOc(bytes) size_t bytes;
     if ( (remainder_size = chunksize(top) - nb) < (long)MINSIZE)
       return 0; /* propagate failure */
   }
+//  printf("\n malloc_extend_top	++++ mALLOc \n");
 
   victim = top;
   set_head(victim, nb | PREV_INUSE);
@@ -2915,6 +2931,7 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
 
   INTERNAL_SIZE_T sz = n * elem_size;
 
+  //printf("\n ++++ cALLOc \n");
 
   /* check if expand_top called, in which case don't need to clear */
 #if MORECORE_CLEARS
@@ -2922,6 +2939,7 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   INTERNAL_SIZE_T oldtopsize = chunksize(top);
 #endif
   Void_t* mem = mALLOc (sz);
+  //printf("\n ++++ mALLOc \n");
 
   if ((long)n < 0) return 0;
 

@@ -1,0 +1,174 @@
+;; This buffer is for notes you don't want to save, and for Lisp evaluation.
+;; If you want to create a file, visit that file with C-x C-f,
+;; then enter the text in that file's own buffer.
+
+Table 15-1119. SGMII mode register initialization steps
+Initialize SerDes to select SGMII. The initialization sequence should be prepended with SerDes initialization.
+	Set Soft_Reset,eTSEC2_MACCFG1 is B0000h base + 500h offset = 000B_1500h
+	MACCFG1[1000_0000_0000_0000_0000_0000_0000_0000]
+	Clear Soft_Reset,
+	MACCFG1[0000_0000_0000_0000_0000_0000_0000_0000]
+Initialize MACCFG2, eTSEC2_MACCFG2 is B1000h base + 504h offset = 000B_1504h
+	MACCFG2[0000_0000_0000_0000_0111_0010_0000_0101]
+	(I/F Mode = 2, Full Duplex = 1)
+	(Set I/F mode = 1 in SGMII 10/100 Mbps speed)
+Initialize ECNTRL, eTSEC2_ECNTRL is B1000h base + 20h offset = 000B_1020h
+	ECNTRL[0000_0000_0000_0000_0001_0000_0010_0010]
+    (This example has Statistics Enable = 1, TBIM = 1, SGMIIM = 1)
+    (Set R100M = 1 in SGMII 100 Mbps speed)
+Initialize MAC Station Address eTSEC2_MACSTNADDR2 is B1000h base + 544h offset = 000B_1544h
+    MACSTNADDR2[0110_0000_0000_0010_0000_0000_0000_0000]
+    to 02608C:876543, for example.
+Initialize MAC Station Address eTSEC2_MACSTNADDR1 is B1000h base + 540h offset = 000B_1540h
+    MACSTNADDR1[0100_0011_0110_0101_1000_0111_1000_1100]
+    to 02608C:876543, for example.
+    
+Assign a Physical address to the TBI, eTSEC2_TBIPA is B1000h base + 30h offset = 000B_1030h
+    TBIPA[0000_0000_0000_0000_0000_0000_0001_0000]
+    set to 16, for example.
+Setup the MII Mgmt clock speed, MDIO2_MIIMCFG is 25000h base + 520h offset = 0002_5520h
+    MIIMCFG[0000_0000_0000_0000_000_0000_0000_0101]
+    set source clock divide by 14 for example to insure that MDC clock speed is not less than 2.5 MHz
+    Read MII Mgmt Indicator register and check for Busy = 0,
+	MDIO1_MIIMIND is 24000h base + 534h offset = 0002_4534h
+	MDIO2_MIIMIND is 25000h base + 534h offset = 0002_5534h
+    MIIMIND ---> [0000_0000_0000_0000_0000_0000_0000_0000]
+    This indicates that the eTSEC MII Mgmt bus is idle.
+
+    
+Set up the MII Mgmt for a read cycle to TBI's Control register (write the PHY address and Register address), MDIO2_MIIMADD is 25000h base + 528h offset = 0002_5528h
+    (0002_5528h) MIIMADD[0000_0000_0000_0000_0001_0000_0000_0000]
+    the control register (CR) is at offset address 0x00 from the TBI's address.
+    Perform an MII Mgmt read cycle to verify state of TBI Control Register (optional)
+    Clear MIIMCOM[Read Cycle],  MDIO2_MIIMCOM is 25000h base + 524h offset = 0002_5524h
+    Set MIIMCOM[Read Cycle]
+    (Uses the TBI address and Register address placed in MIIMADD register),
+    When 0002_5534h MIIMIND[BUSY] = 0,
+    read the MIIMSTAT (002_5530h) and look for AN Enable and other bit information.
+Set up the MII Mgmt for a write cycle to TBICON register (write the PHY address and Register address),
+    (0002_5528h) MIIMADD[0000_0000_0000_0000_0001_0000_0001_0001]
+    The TBICON register is at offset address 0x11 from the TBI's address.
+    Perform an MII Mgmt write cycle to TBI.
+    Writing to MII Mgmt Control with 16-bit data intended for TBICON register,
+    (0002_552Ch) MIIMCON[0000_0000_0000_0000_0000_0000_0010_0000]
+    This sets TBI in single clock mode and MII Mode off to enable communication with SerDes.
+    Check to see if MII Mgmt write is complete.
+    Read MII Mgmt Indicator register and check for Busy = 0,
+    MIIMIND (0002_5534h) ---> [0000_0000_0000_0000_0000_0000_0000_0000]
+    This indicates that the write cycle was completed.
+Set up the MII Mgmt for a write cycle to TBI's AN Advertisement register (write the PHY address and Register address),
+    MIIMADD (0002_5528h) [0000_0000_0000_0000_0001_0000_0000_0100]
+    The AN Advertisement register is at offset address 0x04 from the TBI's address.
+Perform an MII Mgmt write cycle to TBI.
+    Writing to MII Mgmt Control with 16-bit data intended for TBI's AN Advertisement register,
+    MIIMCON(0002_552Ch)[0000_0000_0000_0000_0000_0001_1010_0000]
+    This advertises to the Link Partner that the TBI supports PAUSE and Full Duplex mode and does not support Half Duplex
+    mode.
+Check to see if MII Mgmt write is complete.
+    Read MII Mgmt Indicator register and check for Busy = 0,
+    MIIMIND(0002_5534h) ---> [0000_0000_0000_0000_0000_0000_0000_0000]
+    This indicates that the write cycle was completed.
+    Additional SerDes setup as required
+Set up the MII Mgmt for a write cycle to TBI's Control register (write the PHY address and Register address),
+    MIIMADD(0002_5528h)[0000_0000_0000_0000_0001_0000_0000_0000]
+    the control register (CR) is at offset address 0x00 from the TBI's address.
+Perform an MII Mgmt write cycle to TBI.
+    Writing to MII Mgmt Control with 16-bit data intended for TBI's Control register,
+    MIIMCON(0002_552Ch)[0000_0000_0000_0000_0001_0011_0100_0000]
+    This enables the TBI to restart Auto-Negotiations using the configuration set in the AN Advertisement register.
+Check to see if MII Mgmt write is complete.
+    Read MII Mgmt Indicator register and check for Busy = 0,
+    MIIMIND(0002_5534h) ---> [0000_0000_0000_0000_0000_0000_0000_0000]
+    This indicates that the write cycle was completed.
+Check to see if PHY has completed Auto-Negotiation.
+    Set up the MII Mgmt for a read cycle to PHY MII Mgmt register (write the PHY address and Register address),
+    MIIMADD(0002_5528h)[0000_0000_0000_0000_0001_0000_0000_0001]
+    The PHY Status control register is at address 0x1 and in this case the PHY Address is 0x10.
+Perform an MII Mgmt read cycle of Status Register.
+    Clear MIIMCOM(0002_5524h)[Read Cycle]
+    Set MIIMCOM(0002_5524h)[Read Cycle]
+    (Uses the PHY address (2) and Register address (2) placed in MIIMADD register),
+    When MIIMIND(0002_5534h)[BUSY] = 0,
+    read the MIIMSTAT(0002_5530h) register and check bit 10 (AN Done)
+    MII Mgmt AN Expansion ---> [0000_0000_0000_0000_0000_0000_0000_0110]
+    Other information about the link is also returned. (Extend Status, No pre, Remote Fault, An Ability, Link status, extend Ability)
+Perform an MII Mgmt read cycle of AN Expansion Register.
+    Setup MIIMADD(0002_5528h)[0000_0000_0000_0000_0001_0000_0000_0110]
+    Clear MIIMCOM(0002_5524h)[Read Cycle]
+    Set MIIMCOM[Read Cycle]
+    (Uses the PHY address (0x10) and Register address (6) placed in MIIMADD register),
+    When MIIMIND(0002_5534h)[BUSY] = 0,
+    read the MII Mgmt AN Expansion register and check bits 13 and 14 (NP Able and Page Rx'd)
+    MII Mgmt AN Expansion ---> [0000_0000_0000_0000_0000_0000_0000_0110]
+Perform an MII Mgmt read cycle of AN Link Partner Base Page Ability Register. (Optional)
+    Setup MIIMADD(0002_5528h)[0000_0000_0000_0000_0001_0000_0000_0101]
+    Clear MIIMCOM(0002_5524h)[Read Cycle]
+    Set MIIMCOM[Read Cycle]
+    (Uses the PHY address (0x10) and Register address (5) placed in MIIMADD register),
+    When MIIMIND(0002_5534h)[BUSY] = 0,
+    read the MII Mgmt AN Link Partner Base Page Ability register and check bits 9 and 10. (Half and Full Duplex)
+    MII Mgmt AN Link Partner Base Page Ability ---> [0000_0000_0000_0000_0000_000x_1110_0000]
+
+
+    
+Clear IEVENT register,
+    eTSEC2_IEVENTG0 is B1000h base + 10h offset = 000B_1010h
+    eTSEC2_IEVENTG1 is B1000h base + 4010h offset = 000B_5010h    
+    IEVENT[0000_0000_0000_0000_0000_0000_0000_0000]
+Initialize IMASK (Optional)
+    eTSEC2_IMASKG0 is B1000h base + 14h offset = 000B_1014h
+    eTSEC2_IMASKG1 is B1000h base + 4014h offset = 000B_5014h
+    IMASK[0000_0000_0000_0000_0000_0000_0000_0000]
+Initialize MACnADDR1/2 (Optional)
+    B0000h base + 548h offset + (8d × n), where n = 0d to 14d
+    B0000h base + 54Ch offset + (8d × n), where n = 0d to 14d
+    MACnADDR1/2[0000_0000_0000_0000_0000_0000_0000_0000]
+Initialize GADDRn (Optional)
+    eTSEC2_GADDR0 is B0000h base + 880h offset = 000B_1880h
+    GADDRn[0000_0000_0000_0000_0000_0000_0000_0000]
+Initialize RCTRL (Optional)
+    eTSEC2_RCTRL is B1000h base + 300h offset = 000B_1300h
+    RCTRL[0000_0000_0000_0000_0000_0000_0000_0000]
+Initialize DMACTRL (Optional)
+	eTSEC2_DMACTRL is B1000h base + 2Ch offset = 000B_102Ch
+    DMACTRL[0000_0000_0000_0000_0000_0000_0000_0000]
+Initialize (Empty) Transmit Descriptor ring and fill buffers with Data
+	eTSEC2_TBASE0 is B0000h base + 204h offset = 000B_1204h
+    Initialize TBASE0-TBASE7,
+    TBASE0-TBASE7[LLLL_LLLL_LLLL_LLLL_LLLL_LLLL_LLLL_L000]
+Initialize (Empty) Receive Descriptor ring and fill with empty buffers
+	eTSEC2_RBASE0 is B0000h base + 404h offset = 000B_1404h
+    Initialize RBASE0-RBASE7,
+    RBASE0-RBASE7[LLLL_LLLL_LLLL_LLLL_LLLL_LLLL_LLLL_L000]
+Enable Transmit Queues Initialize TQUEUE
+Enable Receive Queues Initialize RQUEUE
+Enable Rx and Tx,
+	eTSEC2_MACCFG1 is B1000h base + 500h offset = 000B_1500h
+    MACCFG1[0000_0000_0000_0000_0000_0000_0000_0101]
+
+
+ => mii read 0x1f 0
+phyregs ffe25520 read
+1140
+=> mii read 0x1f 1
+phyregs ffe25520 read
+0159( AN not done;Remote fault)
+=> mii read 0x1f 1
+phyregs ffe25520 read
+0149( AN not done)
+=> mii read 0x1f 4
+phyregs ffe25520 read
+01A0
+=> mii read 0x1f 5
+phyregs ffe25520 read
+D401(link failure)
+=> mii read 0x1f 6
+phyregs ffe25520 read
+0006(receive next page
+=> mii read 0x1f 6
+phyregs ffe25520 read
+0004
+=> mii read 0x1f 11
+phyregs ffe25520 read
+0020
+=> 

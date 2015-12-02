@@ -688,12 +688,13 @@ int board_nand_init(struct nand_chip *nand)
 	struct fsl_elbc_mtd *priv;
 	uint32_t br = 0, or = 0;
 
+	//printf("\nboard_nand_init \n");
 	if (!elbc_ctrl) {
 		fsl_elbc_ctrl_init();
 		if (!elbc_ctrl)
 			return -1;
 	}
-
+	//printf("\n  fsl_elbc_ctrl_init \n");
 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;

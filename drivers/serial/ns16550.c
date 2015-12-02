@@ -9,6 +9,11 @@
 #include <watchdog.h>
 #include <linux/types.h>
 #include <asm/io.h>
+#if 1
+#include <asm/immap_85xx.h>
+#define WDI_MASK	0x40000000
+
+#endif
 
 #define UART_LCRVAL UART_LCR_8N1		/* 8 data, 1 stop, no parity */
 #define UART_MCRVAL (UART_MCR_DTR | \
@@ -94,7 +99,33 @@ void NS16550_putc(NS16550_t com_port, char c)
 	 * in puts().
 	 */
 	if (c == '\n')
+		#if 0
 		WATCHDOG_RESET();
+		#else
+		{
+
+		volatile unsigned char i = 0;
+	
+		ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
+		//ccsr_gpio_t *pgpio = (void *)(0xff70f000);
+
+
+	
+		//setbits_be32(&pgpio->gpdir, (0x10000000 | WDI_MASK));  /* bit 3 is LONG; bit1 is WDI */
+
+    		/*
+     		* The HW watchdog MAX6750 is served by an falling
+     		* edge on the WDI pin (GPIO 2_3)
+	 	* using the "iopin inline functions" here causes a system crash
+     		*/
+     		#if 1
+    		setbits_be32(&pgpio->gpdat, WDI_MASK);
+		for (i = 0; i < 30; ) i++;
+			clrbits_be32(&pgpio->gpdat, WDI_MASK);
+		#endif
+		}
+		
+		#endif
 }
 
 #ifndef CONFIG_NS16550_MIN_FUNCTIONS

@@ -45,6 +45,9 @@
 #include <asm/fsl_serdes.h>
 #include <netdev.h>
 
+#include "dev_spi_ds31400.h"
+
+
 #ifdef CONFIG_QE
 
 #define GPIO_GETH_SW_PORT	1
@@ -185,15 +188,12 @@ void board_gpio_init(void)
 
 	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
 
-	/*
-	 * GPIO10 DDR Reset, open drain
-	 * GPIO7  LOAD_DEFAULT_N          Input
-	 * GPIO11  WDI (watchdog input)
-	 * GPIO12  Ethernet Switch Reset
-	 * GPIO13  SLIC Reset
-	 */
 
-	setbits_be32(&pgpio->gpdir, 0x02130000);
+
+	/* GPIO1 WDI ; GPIO3 LONG */
+	setbits_be32(&pgpio->gpdir, 0x52130000); /* changed by tianzhy 2015-06-19 */
+	//setbits_be32(&pgpio->gpdir, 0x52930000); /* changed by tianzhy for test 2000 */
+	//clrbits_be32(&pgpio->gpdir, 0x00800000);
 #ifndef CONFIG_SYS_RAMBOOT
 	/* init DDR3 reset signal */
 	setbits_be32(&pgpio->gpdir, 0x00200000);
@@ -217,10 +217,13 @@ void board_gpio_init(void)
 	setbits_be32(&pgpio->gpdat, 0x00040000);
 #endif
 #endif
+
+
 }
 
 int board_early_init_f(void)
 {
+/*	delete by tianzhy 2015-06-24 
 	ccsr_gur_t *gur = (void *)(CONFIG_SYS_MPC85xx_GUTS_ADDR);
 
 	setbits_be32(&gur->pmuxcr,
@@ -229,7 +232,7 @@ int board_early_init_f(void)
 
 	clrbits_be32(&gur->pmuxcr, MPC85xx_PMUXCR_SD_DATA);
 	setbits_be32(&gur->pmuxcr, MPC85xx_PMUXCR_TDM_ENA);
-
+*/
 	board_gpio_init();
 	board_cpld_init();
 
@@ -640,6 +643,41 @@ void ft_board_setup(void *blob, bd_t *bd)
 		printf("WARNING: could not remove %s: %s.\n",
 			soc_usb_compat, fdt_strerror(err));
 	}
-
+#if 0
+	{
+		struct spi_slave *slave;
+		unsigned char cmd[2] = {0, 0};
+		unsigned char data[2];
+		size_t cmd_len = 2;
+		size_t data_len = 1;
+		slave = spi_slave_init();
+		ds31400_read(slave, cmd, cmd_len, data, data_len);
+		printf("*************data[0] = %08x \n", data[0]);
+	}
+#endif
 }
 #endif
+
+
+/*
+ * p1020 HW hardware watchdog.
+ */
+#ifdef CONFIG_HW_WATCHDOG
+
+#define WDI_PIN		1
+#define WDI_MASK	0x40000000
+
+void hw_watchdog_reset(void)
+{
+	volatile unsigned char i = 0;
+	
+	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
+
+     	#if 1
+    	setbits_be32(&pgpio->gpdat, WDI_MASK); /* GPIO1 WDI ; GPIO3 LONG */
+	for (i = 0; i < 30; ) i++;
+	clrbits_be32(&pgpio->gpdat, WDI_MASK);
+	#endif
+} /* hw_watchdog_reset() */
+
+#endif /* CONFIG_HW_WATCHDOG */

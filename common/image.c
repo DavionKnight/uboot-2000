@@ -1678,7 +1678,7 @@ int boot_get_fdt(int flag, int argc, char * const argv[],
 	*of_size = fdt_totalsize(fdt_blob);
 	debug("   of_flat_tree at 0x%08lx size 0x%08lx\n",
 			(ulong)*of_flat_tree, *of_size);
-
+	
 	return 0;
 
 error:

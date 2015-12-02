@@ -40,6 +40,8 @@
 #include <asm/processor.h>
 #include <asm/fsl_ddr_sdram.h>
 
+#include <asm/immap_85xx.h>
+
 DECLARE_GLOBAL_DATA_PTR;
 
 /*
@@ -228,6 +230,7 @@ int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	val |= 0x70000000;
 	mtspr(DBCR0,val);
 #else
+	#if 0
 	volatile ccsr_gur_t *gur = (void *)(CONFIG_SYS_MPC85xx_GUTS_ADDR);
 
 	/* Attempt board-specific reset */
@@ -236,10 +239,23 @@ int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	/* Next try asserting HRESET_REQ */
 	out_be32(&gur->rstcr, 0x2);
 	udelay(100);
+	#endif
+	/* add by tianzhy 2015-06-24 */
+	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
+
+	clrbits_be32(&pgpio->gpdat, 0x10000000); /* cancel long set */
+	clrbits_be32(&pgpio->gpdir, 0x40000000); /* cancel long set */
+
+	 /* cancel wdi */
+	for(;;);
+
+
+	
 #endif
 
 	return 1;
 }
+
 
 
 /*

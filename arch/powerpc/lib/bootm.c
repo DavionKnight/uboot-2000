@@ -56,6 +56,19 @@ static void set_clocks_in_mhz (bd_t *kbd);
 #define CONFIG_SYS_LINUX_LOWMEM_MAX_SIZE	(768*1024*1024)
 #endif
 
+static int init_devcie_type(void)
+{
+	char *buf;
+	 
+	buf = getenv("device");
+
+	printf("\n devcie = %s ++++++++++++++++ \n", buf);
+
+	memcpy(gd->bd->device, buf, sizeof(gd->bd->device));
+	
+	return 0;
+}
+
 static void boot_jump_linux(bootm_headers_t *images)
 {
 	void	(*kernel)(bd_t *, ulong r4, ulong r5, ulong r6,
@@ -214,9 +227,11 @@ static int boot_bd_t_linux(bootm_headers_t *images)
 	bd_t **kbd = &images->kbd;
 
 	int ret = 0;
-
+	printf("\n  ++++++++++++++++++++\n ");
 	if (!of_size) {
 		/* allocate space for kernel copy of board info */
+		printf("\n  +++++++++++++dfdfdfd+++++++\n ");
+		init_devcie_type();
 		ret = boot_get_kbd (lmb, kbd);
 		if (ret) {
 			puts("ERROR with allocation of kernel bd\n");

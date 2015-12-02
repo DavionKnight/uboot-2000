@@ -69,6 +69,21 @@ void sdram_init(void)
 	set_next_law(0, CONFIG_SYS_SDRAM_SIZE_LAW, LAW_TRGT_IF_DDR_1);
 }
 
+void sdram_reset(void)
+{
+
+	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
+
+	__raw_writel(0x52130000, &pgpio->gpdat);
+	__raw_writel(0x00200000, &pgpio->gpdir);
+
+	udelay(500);
+
+	__raw_writel(0x00200000, &pgpio->gpdat);
+	__raw_writel(0x00200000, &pgpio->gpdir);
+
+}
+
 u32 bus_clk;
 
 void board_init_f(ulong bootflag)
@@ -93,7 +108,7 @@ void board_init_f(ulong bootflag)
 
 #ifndef CONFIG_QE
 	/* init DDR3 reset signal */
-	__raw_writel(0x02000000, &pgpio->gpdir);
+	__raw_writel(0x02200000, &pgpio->gpdir);
 	__raw_writel(0x00200000, &pgpio->gpodr);
 	__raw_writel(0x00000000, &pgpio->gpdat);
 	udelay(1000);
@@ -115,8 +130,10 @@ void board_init_f(ulong bootflag)
 	out_be32(&par_io[1].cpdir1, 0x00000000);
 #endif
 
+	//sdram_reset();
 	/* Initialize the DDR3 */
 	sdram_init();
+	puts("\nsdram_init ok... ");
 
 	/* copy code to RAM and jump to it - this should not return */
 	/* NOTE - code has to be copied out of NAND buffer before
