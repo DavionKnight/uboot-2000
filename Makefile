@@ -21,8 +21,8 @@
 # MA 02111-1307 USA
 #
 
-VERSION = 2011
-PATCHLEVEL = 12
+VERSION =  3 
+PATCHLEVEL = 01 
 SUBLEVEL =
 EXTRAVERSION =
 ifneq "$(SUBLEVEL)" ""
@@ -281,13 +281,13 @@ ifeq ($(CONFIG_GENERIC_LPC_TPM),y)
 LIBS += drivers/tpm/libtpm.o
 endif
 LIBS += drivers/twserial/libtws.o
-LIBS += drivers/usb/eth/libusb_eth.o
-LIBS += drivers/usb/gadget/libusb_gadget.o
-LIBS += drivers/usb/host/libusb_host.o
-LIBS += drivers/usb/musb/libusb_musb.o
-LIBS += drivers/usb/phy/libusb_phy.o
-LIBS += drivers/usb/ulpi/libusb_ulpi.o
-LIBS += drivers/video/libvideo.o
+#LIBS += drivers/usb/eth/libusb_eth.o
+#LIBS += drivers/usb/gadget/libusb_gadget.o
+#LIBS += drivers/usb/host/libusb_host.o
+#LIBS += drivers/usb/musb/libusb_musb.o
+#LIBS += drivers/usb/phy/libusb_phy.o
+#LIBS += drivers/usb/ulpi/libusb_ulpi.o
+#LIBS += drivers/video/libvideo.o
 LIBS += drivers/watchdog/libwatchdog.o
 LIBS += common/libcommon.o
 LIBS += lib/libfdt/libfdt.o
@@ -615,8 +615,10 @@ $(VERSION_FILE):
 		@( localvers='$(shell $(TOPDIR)/tools/setlocalversion $(TOPDIR))' ; \
 		   printf '#define PLAIN_VERSION "%s%s"\n' \
 			"$(U_BOOT_VERSION)" "$${localvers}" ; \
-		   printf '#define U_BOOT_VERSION "U-Boot %s%s"\n' \
-			"$(U_BOOT_VERSION)" "$${localvers}" ; \
+		   printf '#define U_BOOT_VERSION "U-Boot %s"\n' \
+			"$(U_BOOT_VERSION)"  ; \
+		   #printf '#define U_BOOT_VERSION "U-Boot %s%s"\n' \
+		#	"$(U_BOOT_VERSION)" "$${localvers}" ; \
 		) > $@.tmp
 		@( printf '#define CC_VERSION_STRING "%s"\n' \
 		 '$(shell $(CC) --version | head -n 1)' )>>  $@.tmp
