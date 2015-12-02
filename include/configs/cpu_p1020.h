@@ -99,7 +99,7 @@
 #define CONFIG_FSL_ELBC
 #define CONFIG_PCI
 #define CONFIG_PCIE1	/* PCIE controler 1 (slot 1) */
-#define CONFIG_PCIE2	/* PCIE controler 2 (slot 2) */
+ #define CONFIG_PCIE2 	/* PCIE controler 2 (slot 2) */
 #define CONFIG_FSL_PCI_INIT	/* Use common FSL init code */
 #define CONFIG_FSL_PCIE_RESET	/* need PCIe reset errata */
 #define CONFIG_SYS_PCI_64BIT	/* enable 64-bit PCI resources */
@@ -274,12 +274,26 @@
 
 /* NAND boot: 4K NAND loader config */
 #define CONFIG_SYS_NAND_SPL_SIZE	0x1000
-#define CONFIG_SYS_NAND_U_BOOT_SIZE	((512 << 10) + CONFIG_SYS_NAND_SPL_SIZE)
+#define CONFIG_SYS_NAND_U_BOOT_SIZE	((512 *1024) + CONFIG_SYS_NAND_SPL_SIZE)
 #define CONFIG_SYS_NAND_U_BOOT_DST	(0x11000000 - CONFIG_SYS_NAND_SPL_SIZE)
 #define CONFIG_SYS_NAND_U_BOOT_START	0x11000000
 #define CONFIG_SYS_NAND_U_BOOT_OFFS	(0)
 #define CONFIG_SYS_NAND_U_BOOT_RELOC	0x00010000
 #define CONFIG_SYS_NAND_U_BOOT_RELOC_SP	(CONFIG_SYS_NAND_U_BOOT_RELOC + 0x10000)
+
+
+#define CONFIG_CMD_UBI
+#define CONFIG_CMD_UBIFS
+#define CONFIG_CMD_MTDPARTS
+#define CONFIG_MTD_DEVICE
+#define CONFIG_MTD_PARTITIONS
+#define CONFIG_RBTREE
+#define CONFIG_LZO 
+
+#define MTDIDS_DEFAULT "nand0=nand0"
+#define MTDPARTS_DEFAULT "mtdparts=nand0: 0x00200000@0x0(u-boot),0x00200000@0x00200000(uenv),0x01400000@0x00400000(system),0x3e800000@0x01800000(user),-(reserved)"
+#define MTD_ACTIVE_PART "nand0,2"
+
 
 #define CONFIG_SYS_NAND_BR_PRELIM (BR_PHYS_ADDR((CONFIG_SYS_NAND_BASE_PHYS)) \
 	| (2<<BR_DECC_SHIFT)	/* Use HW ECC */ \
@@ -423,6 +437,10 @@
 #ifdef CONFIG_SYS_HUSH_PARSER
 #define CONFIG_SYS_PROMPT_HUSH_PS2 "> "
 #endif
+
+
+ 
+#define CONFIG_HW_WATCHDOG 
 
 /*
  * Pass open firmware flat tree
@@ -644,7 +662,7 @@
 #elif defined(CONFIG_NAND_U_BOOT)
 #define CONFIG_ENV_IS_IN_NAND
 #define CONFIG_ENV_SIZE		CONFIG_SYS_NAND_BLOCK_SIZE
-#define CONFIG_ENV_OFFSET	((512 * 1024) + CONFIG_SYS_NAND_BLOCK_SIZE)
+#define CONFIG_ENV_OFFSET	((2048 * 1024) + CONFIG_SYS_NAND_BLOCK_SIZE)
 #define CONFIG_ENV_RANGE	(3 * CONFIG_ENV_SIZE)
 #else
 #define CONFIG_ENV_IS_NOWHERE	/* Store ENV in memory only */
@@ -684,7 +702,7 @@
  * USB
  */
 #define CONFIG_HAS_FSL_DR_USB
-
+#undef  CONFIG_HAS_FSL_DR_USB
 #if defined(CONFIG_HAS_FSL_DR_USB)
 #define CONFIG_USB_EHCI
 
@@ -763,8 +781,8 @@
 
 #define CONFIG_BAUDRATE	115200
 
-#define CONFIG_IPADDR 192.9.200.120
-#define CONFIG_SERVERIP 192.9.200.187
+#define CONFIG_IPADDR 192.192.8.209
+#define CONFIG_SERVERIP 192.192.8.210
 #define CONFIG_NETMASK 255.255.255.0
 
 #ifdef CONFIG_HAS_ETH0
@@ -807,6 +825,10 @@ i2c mw 18 3 __SW_BOOT_MASK 1; reset
 "netdev=eth0\0"	\
 "uboot=" MK_STR(CONFIG_UBOOTPATH) "\0"	\
 "loadaddr=1000000\0"	\
+"bootcmd=run dnalli\0"	\
+"dnalli=tftp 0x1000000 set_env.uscr; source 0x1000000\0"	\
+"ipaddr=192.168.1.1\0"	\
+"serverip=192.168.1.254\0"	\
 "bootfile=uImage\0"	\
 "tftpflash=tftpboot $loadaddr $uboot; "	\
 	"protect off " MK_STR(CONFIG_SYS_TEXT_BASE) " +$filesize; "	\
@@ -817,8 +839,9 @@ i2c mw 18 3 __SW_BOOT_MASK 1; reset
 "hwconfig=usb1:dr_mode=host,phy_type=ulpi\0"    \
 "consoledev=ttyS0\0"	\
 "ramdiskaddr=2000000\0"	\
-"ramdiskfile=rootfs.ext2.gz.uboot\0"	\
-"fdtaddr=c00000\0"	\
+"ramdiskfile=rootfs\0"	\
+"fdtaddr=c00000\0"\
+"fdtfile=1604-dtb\0" \
 "bdev=sda1\0" \
 "jffs2nor=mtdblock3\0"	\
 "norbootaddr=ef080000\0"	\
@@ -837,7 +860,14 @@ MK_STR(__PCIE_RST_CMD)"\0" \
 "phy0addr=" MK_STR(TSEC1_PHY_ADDR) "\0" \
 "phy1addr=" MK_STR(TSEC2_PHY_ADDR) "\0" \
 "phy2addr=" MK_STR(TSEC3_PHY_ADDR) "\0"  \
-"eth2_if=sgmii\0"
+"eth2_if=sgmii\0" \
+"vendor=huahuan\0"  \
+"device=p1020\0"  \
+"CreateSystem=nand erase.part system;ubi part system 2048;ubi create system;ubi info 1\0"  \
+"dnu=tftp 0x1000000 u-boot-2000.bin;nand erase 0 200000;nand write 0x1000000 0 200000\0" \
+"dnk=run CreateSystem;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 system 0x;ubifsmount system;ubifsls;save\0" \
+"format=mtdparts delall;mtdparts add nand0 2048k u-boot;mtdparts add nand0 2048k uenv;mtdparts add nand0 20480k system;mtdparts add nand0 1024000k user;nand erase.part user;ubi part user 2048;ubi create user; ubi info 1\0"
+
 
 #define CONFIG_NFSBOOTCOMMAND	\
 "setenv bootargs root=/dev/nfs rw "	\
@@ -849,12 +879,14 @@ MK_STR(__PCIE_RST_CMD)"\0" \
 "bootm $loadaddr - $fdtaddr"
 
 #define CONFIG_HDBOOT	\
-"setenv bootargs root=/dev/$bdev rw rootdelay=30 "	\
+"setenv bootargs root=/dev/$bdev rw  "	\
 "console=$consoledev,$baudrate $othbootargs;" \
-"usb start;"	\
-"ext2load usb 0:1 $loadaddr /boot/$bootfile;"	\
-"ext2load usb 0:1 $fdtaddr /boot/$fdtfile;"	\
-"bootm $loadaddr - $fdtaddr"
+"ubi part system 2048;" \
+"ubifsmount   system;" \
+"ubifsload  $ramdiskaddr $ramdiskfile;" \
+"ubifsload  $loadaddr $bootfile;" \
+"ubifsload  $fdtaddr $fdtfile;" \
+"bootm $loadaddr $ramdiskaddr $fdtaddr" 
 
 #define CONFIG_USB_FAT_BOOT	\
 "setenv bootargs root=/dev/ram rw "	\
