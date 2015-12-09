@@ -573,7 +573,7 @@
 #define CONFIG_TSEC3_NAME	"eth2"/* "eTSEC3" */
 #define CONFIG_TSEC3_SGMII
 
-#define TSEC1_PHY_ADDR	0x1e       /* 2 */
+#define TSEC1_PHY_ADDR	0x5       /* 2 */
 #define TSEC2_PHY_ADDR	0x19    /* 0 */
 #define TSEC3_PHY_ADDR	0x1a    /* 1 */
 

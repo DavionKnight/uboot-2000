@@ -171,7 +171,7 @@ int bcm53101_read(struct mii_dev *bus, unsigned char page, unsigned char addr, u
         unsigned short setval, ret_val = 0, s_count = 0xffff;
 	int mii_id = 0;	
 
-printf("page=0x%x,addr=0x%x\n",page,addr);
+//printf("page=0x%x,addr=0x%x\n",page,addr);
 
 	if(((page >= 0x10) && (page <= 0x14))||(page == 0x17))//get real port phy addr
 	{
@@ -208,16 +208,12 @@ printf("page=0x%x,addr=0x%x\n",page,addr);
 	        }while(s_count > 0);
 	        setval = tsec_phy_read(bus, mii_id, 0, PSEPHY_ACCESS_REG1);
 		value[0] = setval;
-		printf("value[0]=0x%x\n",value[0]);
 	        setval = tsec_phy_read(bus, mii_id, 0, PSEPHY_ACCESS_REG2);
 		value[1] = setval;
-		printf("value[1]=0x%x\n",value[1]);
 	        setval = tsec_phy_read(bus, mii_id, 0, PSEPHY_ACCESS_REG3);
 		value[2] = setval;
-		printf("value[2]=0x%x\n",value[2]);
 	        setval = tsec_phy_read(bus, mii_id, 0, PSEPHY_ACCESS_REG4);
 		value[3] = setval;
-		printf("value[3]=0x%x\n",value[3]);
 	}
 
 	return 0;
@@ -270,10 +266,6 @@ int bcm53101_init(struct mii_dev *bus)
 	mdio_val[0] = 0x3;
 	bcm53101_write(bus, 0, 0x60, mdio_val);
 
-memset(mdio_val, 0, sizeof(mdio_val));
-bcm53101_read(bus,0,0x08,mdio_val);
-printf("0, 08:0x%x 0x%x 0x%x 0x%x\n",mdio_val[0],mdio_val[1],mdio_val[2],mdio_val[3]);
-
 	return 0;
 }
 
@@ -303,9 +295,9 @@ int fsl_pq_mdio_init(bd_t *bis, struct fsl_pq_mdio_info *info)
 	ret = mdio_register(bus);
 	if(!strcmp(info->name, DEFAULT_MII_NAME))  //bcm53101 for outband init
 	{
-		printf("mii name =%s\n",info->name);
+//		printf("mii name =%s\n",info->name);
 		bcm53101_init(bus);	
-		printf("mii init end\n");
+		printf("BCM53101 init done\n");
 	}
 
 

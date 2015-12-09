@@ -216,8 +216,6 @@ void board_gpio_init(void)
 	setbits_be32(&pgpio->gpdir, 0x00040000);
 	setbits_be32(&pgpio->gpdat, 0x00040000);
 #endif
-        printf("gpio dir:0x%x\n",in_be32(&pgpio->gpdir));
-        printf("gpio data:0x%x\n",in_be32(&pgpio->gpdat));
 
 #endif
 
@@ -413,15 +411,9 @@ int board_eth_init(bd_t *bis)
 #if 1
 	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
 
-        printf("22gpio dir:0x%x\n",in_be32(&pgpio->gpdir));
-        printf("gpio data:0x%x\n",in_be32(&pgpio->gpdat));
-
-	/* GPIO1 WDI ; GPIO3 LONG */
-	setbits_be32(&pgpio->gpdir, 0x00840000); /* changed by tianzhy 2015-06-19 */
-	setbits_be32(&pgpio->gpdat, 0x00840000); /* changed by tianzhy for test 2000 */
-	//clrbits_be32(&pgpio->gpdir, 0x00800000);
-        printf("33gpio dir:0x%x\n",in_be32(&pgpio->gpdir));
-        printf("gpio data:0x%x\n",in_be32(&pgpio->gpdat));
+	/* GPIO8:GPIO13 output 1 to select outband bcm53101 - add by zhangjj 2015-12-9*/
+	setbits_be32(&pgpio->gpdir, 0x00840000); 
+	setbits_be32(&pgpio->gpdat, 0x00840000); 
 
 #endif
 

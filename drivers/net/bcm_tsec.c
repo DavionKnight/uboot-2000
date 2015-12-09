@@ -656,14 +656,7 @@ static int tsec_initialize(bd_t *bis, struct tsec_info_struct *tsec_info)
 	clrbits_be32(&priv->regs->maccfg1, MACCFG1_SOFT_RESET);
 
 	/* Try to initialize PHY here, and return */
-#if 0
 	return init_phy(dev);
-#else
-	if(tsec_info->phyaddr == TSEC1_PHY_ADDR)
-		return 1;
-	else
-		return 0;
-#endif
 }
 
 /*
