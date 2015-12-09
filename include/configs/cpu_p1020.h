@@ -45,7 +45,7 @@
 /* #define __SW_BOOT_SD		0x9c */
 /* #define __SW_BOOT_NAND		0xec */
 /* #define __SW_BOOT_PCIE		0x6c */
-/* #define CONFIG_HH_BOOT_RAM */
+#define CONFIG_HH_BOOT_RAM 
 
 #endif
 
@@ -573,7 +573,7 @@
 #define CONFIG_TSEC3_NAME	"eth2"/* "eTSEC3" */
 #define CONFIG_TSEC3_SGMII
 
-#define TSEC1_PHY_ADDR	3       /* 2 */
+#define TSEC1_PHY_ADDR	0x1e       /* 2 */
 #define TSEC2_PHY_ADDR	0x19    /* 0 */
 #define TSEC3_PHY_ADDR	0x1a    /* 1 */
 

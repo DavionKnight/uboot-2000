@@ -216,6 +216,9 @@ void board_gpio_init(void)
 	setbits_be32(&pgpio->gpdir, 0x00040000);
 	setbits_be32(&pgpio->gpdat, 0x00040000);
 #endif
+        printf("gpio dir:0x%x\n",in_be32(&pgpio->gpdir));
+        printf("gpio data:0x%x\n",in_be32(&pgpio->gpdat));
+
 #endif
 
 
@@ -406,6 +409,20 @@ int board_eth_init(bd_t *bis)
 			puts("Failure uploading VSC7385 microcode.\n");
 	} else
 		puts("No address specified for VSC7385 microcode.\n");
+#endif
+#if 1
+	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
+
+        printf("22gpio dir:0x%x\n",in_be32(&pgpio->gpdir));
+        printf("gpio data:0x%x\n",in_be32(&pgpio->gpdat));
+
+	/* GPIO1 WDI ; GPIO3 LONG */
+	setbits_be32(&pgpio->gpdir, 0x00840000); /* changed by tianzhy 2015-06-19 */
+	setbits_be32(&pgpio->gpdat, 0x00840000); /* changed by tianzhy for test 2000 */
+	//clrbits_be32(&pgpio->gpdir, 0x00800000);
+        printf("33gpio dir:0x%x\n",in_be32(&pgpio->gpdir));
+        printf("gpio data:0x%x\n",in_be32(&pgpio->gpdat));
+
 #endif
 
 	mdio_info.regs = (struct tsec_mii_mng *)CONFIG_SYS_MDIO_BASE_ADDR;

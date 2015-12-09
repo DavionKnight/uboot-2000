@@ -20,10 +20,11 @@ case "$1" in
         make clean
         make CPU_P1020_NAND
         cp u-boot-nand.bin /tftpboot/u-boot-2000.bin
+	cp u-boot.bin /mnt/hgfs/D/documents/P1020/p1020-firmware/u-boot-2000ram.bin 
         ;;
     all)
         make all
-        #cp u-boot.bin ~/tftpboot/
+        cp u-boot.bin /tftpboot/u-boot-2000-ram.bin
         ;;
     *)
         echo  $"Usage: $0 {clean |distclean |cpu-p1020| all}"
