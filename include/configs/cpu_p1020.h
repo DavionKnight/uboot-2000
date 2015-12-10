@@ -865,7 +865,7 @@ MK_STR(__PCIE_RST_CMD)"\0" \
 "device=p1020\0"  \
 "CreateSystem=nand erase.part system;ubi part system 2048;ubi create system;ubi info 1\0"  \
 "dnu=tftp 0x1000000 u-boot-2000.bin;nand erase 0 200000;nand write 0x1000000 0 200000\0" \
-"dnk=run CreateSystem;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 system 0x;ubifsmount system;ubifsls;save\0" \
+"dnk=run CreateSystem;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 system 0x8f6000;ubifsmount system;ubifsls;save\0" \
 "format=mtdparts delall;mtdparts add nand0 2048k u-boot;mtdparts add nand0 2048k uenv;mtdparts add nand0 20480k system;mtdparts add nand0 1024000k user;nand erase.part user;ubi part user 2048;ubi create user; ubi info 1\0"
 
 
