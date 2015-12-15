@@ -45,7 +45,7 @@
 /* #define __SW_BOOT_SD		0x9c */
 /* #define __SW_BOOT_NAND		0xec */
 /* #define __SW_BOOT_PCIE		0x6c */
-/* #define CONFIG_HH_BOOT_RAM */ 
+#define CONFIG_HH_BOOT_RAM
 
 #endif
 
