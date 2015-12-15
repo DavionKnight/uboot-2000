@@ -1,0 +1,26 @@
+
+echo ---------------------------------------------------------------
+echo set variables
+echo ---------------------------------------------------------------
+
+setenv kernel_img 0x8f6000
+
+setenv rt 'setenv bootargs root=/dev/$bdev rw  console=$consoledev,$baudrate $othbootargs;ubi part system 2048;ubifsmount   system;ubifsload  $ramdiskaddr $ramdiskfile;ubifsload  $loadaddr $bootfile;ubifsload  $fdtaddr $fdtfile;bootm $loadaddr $ramdiskaddr $fdtaddr'
+
+setenv bootcmd 'run rt'
+
+saveenv
+
+run format
+
+run CreateSystem
+tftp 0x1000000 p2000-ubi.fs;
+ubi write  0x1000000 system $kernel_img;
+ubifsmount system;
+ubifsls;
+save
+
+echo ---------------------------------------------------------------
+echo reset the u-boot
+echo ---------------------------------------------------------------
+reset
