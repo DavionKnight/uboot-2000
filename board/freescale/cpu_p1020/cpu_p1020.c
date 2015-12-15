@@ -410,6 +410,12 @@ int board_eth_init(bd_t *bis)
 #endif
 #if 1
 	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
+	
+	/* GPIO5 output 0 to reset outband bcm53101 - add by zhangjj 2015-12-15*/
+	setbits_be32(&pgpio->gpdir, 0x04000000); 
+	clrbits_be32(&pgpio->gpdat, 0x04000000);
+	udelay(5000); 
+	setbits_be32(&pgpio->gpdat, 0x04000000); 
 
 	/* GPIO8:GPIO13 output 1 to select outband bcm53101 - add by zhangjj 2015-12-9*/
 	setbits_be32(&pgpio->gpdir, 0x00840000); 
