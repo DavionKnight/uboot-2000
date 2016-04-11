@@ -2,7 +2,7 @@
 export ARCH=powerpc
 
 
-export PATH=/opt/eldk42/usr/bin:$PATH
+export PATH=/home/kevin/Documents/ppc-tools/usr/bin:$PATH
 
 export CROSS_COMPILE=ppc_85xxDP-
 
