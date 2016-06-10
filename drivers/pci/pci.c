@@ -728,6 +728,17 @@ void pci_init(void)
 {
 	hose_head = NULL;
 
+#if 1  /* GPIO5 output 0 to reset outband bcm56445 - add by zhangjj 2015-12-15*/
+	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
+	
+	setbits_be32(&pgpio->gpdir, 0x00010000); 
+	clrbits_be32(&pgpio->gpdat, 0x00010000);
+	udelay(50000); 
+	setbits_be32(&pgpio->gpdat, 0x00010000); 
+
+
+#endif
+
 	/* now call board specific pci_init()... */
 	pci_init_board();
 }
