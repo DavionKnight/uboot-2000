@@ -23,7 +23,8 @@
 
 VERSION =  3 
 #PATCHLEVEL = 12 
-PATCHLEVEL = 13	#add bcm56445 reset
+#PATCHLEVEL = 13	#add bcm56445 reset
+PATCHLEVEL = 14#move dpll init from kernel  
 SUBLEVEL =
 EXTRAVERSION =
 ifneq "$(SUBLEVEL)" ""
