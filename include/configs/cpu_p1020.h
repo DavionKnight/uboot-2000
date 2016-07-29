@@ -871,7 +871,7 @@ MK_STR(__PCIE_RST_CMD)"\0" \
 "format=mtdparts delall;mtdparts add nand0 2048k u-boot;mtdparts add nand0 2048k uenv;mtdparts add nand0 20480k system;mtdparts add nand0 1024000k user;nand erase.part user;ubi part user 2048;ubi create user; ubi info 1\0" \
 "kernel_img=8f6000\0" \
 "rt=setenv bootargs root=/dev/$bdev rw  console=$consoledev,$baudrate $othbootargs;ubi part system 2048;ubifsmount system;ubifsload  $ramdiskaddr $ramdiskfile;ubifsload  $loadaddr $bootfile;ubifsload  $fdtaddr $fdtfile;bootm $loadaddr $ramdiskaddr $fdtaddr \0" \
-"clrenv=nand erase 2000000 200000\0"
+"clrenv=nand erase 200000 200000\0"
 
 
 #define CONFIG_NFSBOOTCOMMAND	\

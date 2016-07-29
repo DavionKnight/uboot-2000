@@ -7,8 +7,6 @@ setenv kernel_img 0x8f6000
 
 setenv rt 'setenv bootargs root=/dev/$bdev rw  console=$consoledev,$baudrate $othbootargs;ubi part system 2048;ubifsmount   system;ubifsload  $ramdiskaddr $ramdiskfile;ubifsload  $loadaddr $bootfile;ubifsload  $fdtaddr $fdtfile;bootm $loadaddr $ramdiskaddr $fdtaddr'
 
-setenv clrenv 'nand erase.part uenv'
-
 setenv bootcmd 'run rt'
 
 saveenv
