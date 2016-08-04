@@ -293,7 +293,7 @@
 #define CONFIG_LZO 
 
 #define MTDIDS_DEFAULT "nand0=nand0"
-#define MTDPARTS_DEFAULT "mtdparts=nand0: 0x00200000@0x0(u-boot),0x00200000@0x00200000(uenv),0x01400000@0x00400000(system),0x3e800000@0x01800000(user),-(reserved)"
+#define MTDPARTS_DEFAULT "mtdparts=nand0: 0x00200000@0x0(u-boot),0x00200000@0x00200000(uenv),0x01400000@0x00400000(system),0x19000000@0x01800000(safe),0x25000000@0x1a800000(user),-(reserved)"
 #define MTD_ACTIVE_PART "nand0,2"
 
 
@@ -868,7 +868,7 @@ MK_STR(__PCIE_RST_CMD)"\0" \
 "CreateSystem=nand erase.part system;ubi part system 2048;ubi create system;ubi info 1\0"  \
 "dnu=tftp 0x1000000 u-boot-2000.bin;nand erase 0 200000;nand write 0x1000000 0 200000\0" \
 "dnk=run CreateSystem;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 system 0x8f6000;ubifsmount system;ubifsls;save\0" \
-"format=mtdparts delall;mtdparts add nand0 2048k u-boot;mtdparts add nand0 2048k uenv;mtdparts add nand0 20480k system;mtdparts add nand0 1024000k user;nand erase.part user;ubi part user 2048;ubi create user; ubi info 1\0" \
+"format=mtdparts delall;mtdparts add nand0 2048k u-boot;mtdparts add nand0 2048k uenv;mtdparts add nand0 20480k system;mtdparts add nand0 409600k safe;mtdparts add nand0 606208k user;nand erase.part user;nand erase.part safe;nand erase.part system;ubi part user;ubi create home;ubi part system;ubi create kernel;ubi part safe;ubi create userdata; ubi info 1\0" \
 "kernel_img=8f6000\0" \
 "rt=setenv bootargs root=/dev/$bdev rw  console=$consoledev,$baudrate $othbootargs;ubi part system 2048;ubifsmount system;ubifsload  $ramdiskaddr $ramdiskfile;ubifsload  $loadaddr $bootfile;ubifsload  $fdtaddr $fdtfile;bootm $loadaddr $ramdiskaddr $fdtaddr \0" \
 "clrenv=nand erase 200000 200000\0"

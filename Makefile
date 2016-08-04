@@ -24,7 +24,8 @@
 VERSION =  3 
 #PATCHLEVEL = 12 
 #PATCHLEVEL = 13	#add bcm56445 reset
-PATCHLEVEL = 14#move dpll init from kernel  
+#PATCHLEVEL = 14#move dpll init from kernel  
+PATCHLEVEL = 14-T#add safe partition
 SUBLEVEL =
 EXTRAVERSION =
 ifneq "$(SUBLEVEL)" ""
