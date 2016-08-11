@@ -30,6 +30,9 @@
 #define CONFIG_PHYS_64BIT
 #endif
 
+/*add cmd auto complete 2016-8-17*/
+#define CONFIG_AUTO_COMPLETE 
+
 #if defined(CONFIG_CPU_P1020)
 #define CONFIG_BOARDNAME "CPU-P1020"
 #define CONFIG_NAND_FSL_ELBC
