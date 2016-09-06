@@ -112,7 +112,7 @@ void board_init_f(ulong bootflag)
 	__raw_writel(0x02210000, &pgpio->gpdir);
 	__raw_writel(0x00210000, &pgpio->gpodr);
 	__raw_writel(0x00000000, &pgpio->gpdat);
-	udelay(1000);
+	udelay(20000);
 	__raw_writel(0x00210000, &pgpio->gpdat);
 	udelay(20000);
 	__raw_writel(0x00000000, &pgpio->gpdir);
