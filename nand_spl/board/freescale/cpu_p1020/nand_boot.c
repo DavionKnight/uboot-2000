@@ -114,7 +114,7 @@ void board_init_f(ulong bootflag)
 	__raw_writel(0x00000000, &pgpio->gpdat);
 	udelay(1000);
 	__raw_writel(0x00210000, &pgpio->gpdat);
-	udelay(1000);
+	udelay(20000);
 	__raw_writel(0x00000000, &pgpio->gpdir);
 #elif defined(CONFIG_P1021RDB)
 	/* init DDR3 reset signal CE_PB8 */
