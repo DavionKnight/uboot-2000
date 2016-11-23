@@ -296,7 +296,7 @@
 #define CONFIG_LZO 
 
 #define MTDIDS_DEFAULT "nand0=nand0"
-#define MTDPARTS_DEFAULT "mtdparts=nand0: 0x00200000@0x0(u-boot),0x00200000@0x00200000(uenv),0x01400000@0x00400000(system),0x3e800000@0x01800000(user),-(reserved)"
+#define MTDPARTS_DEFAULT "mtdparts=nand0:0x00200000@0x0(u-boot),0x00200000@0x00200000(uenv),0x02000000@0x00400000(kernel1),0x02000000@0x02400000(kernel2),0x00200000@0x04400000(itable),0x1a000000@0x04600000(application),0x21000000@0x1e600000(data),-(reserved)"
 #define MTD_ACTIVE_PART "nand0,2"
 
 
@@ -868,10 +868,13 @@ MK_STR(__PCIE_RST_CMD)"\0" \
 "eth2_if=sgmii\0" \
 "vendor=huahuan\0"  \
 "device=p1020\0"  \
-"CreateSystem=nand erase.part system;ubi part system 2048;ubi create system;ubi info 1\0"  \
+"CreateSystem1=nand erase.part kernel1;ubi part kernel1;ubi create kernel1;ubi info 1\0"  \
+"CreateSystem2=nand erase.part kernel2;ubi part kernel2;ubi create kernel2;ubi info 1\0"  \
 "dnu=tftp 0x1000000 u-boot-2000.bin;nand erase 0 200000;nand write 0x1000000 0 200000\0" \
-"dnk=run CreateSystem;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 system 0x8f6000;ubifsmount system;ubifsls;save\0" \
-"format=mtdparts delall;mtdparts add nand0 2048k u-boot;mtdparts add nand0 2048k uenv;mtdparts add nand0 20480k system;mtdparts add nand0 1024000k user;nand erase.part user;ubi part user 2048;ubi create user; ubi info 1\0" \
+"dnk=run CreateSystem1;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 kernel1 0x8f6000;ubifsmount kernel1;run CreateSystem2;ubi write  0x1000000 kernel2 0x8f6000;ubifsmount kernel2;ubifsls;save\0" \
+"dnk1=run CreateSystem1;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 kernel1 0x8f6000;ubifsmount kernel1;ubifsls;save\0" \
+"dnk2=run CreateSystem2;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 kernel2 0x8f6000;ubifsmount kernel2;ubifsls;save\0" \
+"format=mtdparts delall;mtdparts default;saveenv;nand erase.part application;ubi part application 2048;ubi create home;nand erase.part kernel1;ubi part kernel1 2048;ubi create kernel1;nand erase.part kernel2;ubi part kernel2 2048;ubi create kernel2;nand erase.part data;ubi part data 2048;ubi create data; ubi info 1\0" \
 "kernel_img=8f6000\0" \
 "rt=setenv bootargs root=/dev/$bdev rw  console=$consoledev,$baudrate $othbootargs;ubi part system 2048;ubifsmount system;ubifsload  $ramdiskaddr $ramdiskfile;ubifsload  $loadaddr $bootfile;ubifsload  $fdtaddr $fdtfile;bootm $loadaddr $ramdiskaddr $fdtaddr \0" \
 "clrenv=nand erase 200000 200000\0"
