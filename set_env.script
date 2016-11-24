@@ -5,8 +5,6 @@ echo ---------------------------------------------------------------
 
 setenv kernel_img 0x8f6000
 
-setenv rt 'setenv bootargs root=/dev/$bdev rw  console=$consoledev,$baudrate $othbootargs;ubi part kernel1 2048;ubifsmount kernel1;ubifsload  $ramdiskaddr $ramdiskfile;ubifsload  $loadaddr $bootfile;ubifsload  $fdtaddr $fdtfile;bootm $loadaddr $ramdiskaddr $fdtaddr'
-
 setenv bootcmd 'run rt'
 
 saveenv

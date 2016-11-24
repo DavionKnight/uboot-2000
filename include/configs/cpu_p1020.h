@@ -871,12 +871,12 @@ MK_STR(__PCIE_RST_CMD)"\0" \
 "CreateSystem1=nand erase.part kernel1;ubi part kernel1;ubi create kernel1;ubi info 1\0"  \
 "CreateSystem2=nand erase.part kernel2;ubi part kernel2;ubi create kernel2;ubi info 1\0"  \
 "dnu=tftp 0x1000000 u-boot-2000.bin;nand erase 0 200000;nand write 0x1000000 0 200000\0" \
-"dnk=run CreateSystem1;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 kernel1 0x8f6000;ubifsmount kernel1;run CreateSystem2;ubi write  0x1000000 kernel2 0x8f6000;ubifsmount kernel2;ubifsls;save\0" \
+"dnk=run dnk1;run dnk2;\0" \
 "dnk1=run CreateSystem1;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 kernel1 0x8f6000;ubifsmount kernel1;ubifsls;save\0" \
 "dnk2=run CreateSystem2;tftp 0x1000000 p2000-ubi.fs;ubi write  0x1000000 kernel2 0x8f6000;ubifsmount kernel2;ubifsls;save\0" \
 "format=mtdparts delall;mtdparts default;saveenv;nand erase.part application;ubi part application 2048;ubi create home;nand erase.part kernel1;ubi part kernel1 2048;ubi create kernel1;nand erase.part kernel2;ubi part kernel2 2048;ubi create kernel2;nand erase.part data;ubi part data 2048;ubi create data; ubi info 1\0" \
 "kernel_img=8f6000\0" \
-"rt=setenv bootargs root=/dev/$bdev rw  console=$consoledev,$baudrate $othbootargs;ubi part system 2048;ubifsmount system;ubifsload  $ramdiskaddr $ramdiskfile;ubifsload  $loadaddr $bootfile;ubifsload  $fdtaddr $fdtfile;bootm $loadaddr $ramdiskaddr $fdtaddr \0" \
+"rt=setenv bootargs root=/dev/$bdev rw  console=$consoledev,$baudrate $othbootargs;ubi bootk;bootm $loadaddr $ramdiskaddr $fdtaddr \0" \
 "clrenv=nand erase 200000 200000\0"
 
 
