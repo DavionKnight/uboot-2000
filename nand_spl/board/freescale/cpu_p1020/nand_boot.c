@@ -109,11 +109,11 @@ void board_init_f(ulong bootflag)
 #ifndef CONFIG_QE
 	/* init DDR3 reset signal */
 	puts("\nDDR & BCM56445 reset... ");
-	__raw_writel(0x02210000, &pgpio->gpdir);
-	__raw_writel(0x00210000, &pgpio->gpodr);
+	__raw_writel(0x02200000, &pgpio->gpdir);
+	__raw_writel(0x00200000, &pgpio->gpodr);
 	__raw_writel(0x00000000, &pgpio->gpdat);
 	udelay(20000);
-	__raw_writel(0x00210000, &pgpio->gpdat);
+	__raw_writel(0x00200000, &pgpio->gpdat);
 	udelay(20000);
 	__raw_writel(0x00000000, &pgpio->gpdir);
 #elif defined(CONFIG_P1021RDB)
