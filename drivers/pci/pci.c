@@ -741,7 +741,9 @@ void pci_init(void)
 	setbits_be32(&pgpio->gpdat, 1<<16); /*for insurance purposes reconfig it*/
 	clrbits_be32(&pgpio->gpdir, 1<<16); 
 	clrbits_be32(&pgpio->gpdir, 1<<16); /*for insurance purposes reconfig it*/
-//printf("5kkkkdat=0x%x,addr=%x\n",in_be32(&pgpio->gpdat),&pgpio->gpdat);
+
+	printf("gpio dir=0x%x\n",in_be32(&pgpio->gpdir));
+	printf("gpio dat=0x%x\n",in_be32(&pgpio->gpdat));
 
 	udelay(10000);
 #endif

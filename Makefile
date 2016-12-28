@@ -21,14 +21,14 @@
 # MA 02111-1307 USA
 #
 
-VERSION =  v001r001 
+VERSION =  v001r002 
 #PATCHLEVEL = 12 
 #PATCHLEVEL = 13	#add bcm56445 reset
 #PATCHLEVEL = 14#move dpll init from kernel  
 #PATCHLEVEL = 15  #the reset bcm56445 time extend from 1ms to 20ms
 PATCHLEVEL = 
 SUBLEVEL =
-EXTRAVERSION =
+EXTRAVERSION =  H20PN
 ifneq "$(SUBLEVEL)" ""
 U_BOOT_VERSION = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
 else
