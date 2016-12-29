@@ -728,15 +728,24 @@ void pci_init(void)
 {
 	hose_head = NULL;
 
-#if 0  /* GPIO5 output 0 to reset outband bcm56445 - add by zhangjj 2015-12-15*/
-	ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
+#if 1  /* GPIO5 output 0 to reset outband bcm56445 - add by zhangjj 2015-12-15*/
+	volatile ccsr_gpio_t *pgpio = (void *)(CONFIG_SYS_MPC85xx_GPIO_ADDR);
 	
-	setbits_be32(&pgpio->gpdir, 0x00010000); 
-	clrbits_be32(&pgpio->gpdat, 0x00010000);
-	udelay(50000); 
-	setbits_be32(&pgpio->gpdat, 0x00010000); 
+	out_be32(&pgpio->gpimr, 0x0);
+	out_be32(&pgpio->gpier, 0xffffffff);
+	out_be32(&pgpio->gpodr, 0x0);
+	setbits_be32(&pgpio->gpdir, 1<<16); 
+	clrbits_be32(&pgpio->gpdat, 1<<16);
+	udelay(20000); 
+	setbits_be32(&pgpio->gpdat, 1<<16); 
+	setbits_be32(&pgpio->gpdat, 1<<16); /*for insurance purposes reconfig it*/
+	clrbits_be32(&pgpio->gpdir, 1<<16); 
+	clrbits_be32(&pgpio->gpdir, 1<<16); /*for insurance purposes reconfig it*/
 
-	udelay(100000);
+	printf("gpio dir=0x%x\n",in_be32(&pgpio->gpdir));
+	printf("gpio dat=0x%x\n",in_be32(&pgpio->gpdat));
+
+	udelay(10000);
 #endif
 
 	/* now call board specific pci_init()... */

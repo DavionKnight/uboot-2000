@@ -191,7 +191,7 @@ void board_gpio_init(void)
 
 
 	/* GPIO1 WDI ; GPIO3 LONG */
-	setbits_be32(&pgpio->gpdir, 0x52130000); /* changed by tianzhy 2015-06-19 */
+	setbits_be32(&pgpio->gpdir, 0x52120000); /* changed by tianzhy 2015-06-19 */
 	//setbits_be32(&pgpio->gpdir, 0x52930000); /* changed by tianzhy for test 2000 */
 	//clrbits_be32(&pgpio->gpdir, 0x00800000);
 #ifndef CONFIG_SYS_RAMBOOT
