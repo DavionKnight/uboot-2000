@@ -21,7 +21,7 @@
 # MA 02111-1307 USA
 #
 
-VERSION =  v001r002 
+VERSION =  v001r003 
 #PATCHLEVEL = 12 
 #PATCHLEVEL = 13	#add bcm56445 reset
 #PATCHLEVEL = 14#move dpll init from kernel  
